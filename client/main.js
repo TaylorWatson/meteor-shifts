@@ -1,7 +1,11 @@
-import App from './components/App';
+import App from './imports/components/AppContainer';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { mount } from 'react-mounter';
+import Meteor from 'meteor/meteor';
 
-Meteor.startup(() => {
-  ReactDOM.render(<App />, document.getElementById('app-content'));
-})
+FlowRouter.route('/', {
+  action(params, queryParams) {
+    mount(App);
+  }
+});
