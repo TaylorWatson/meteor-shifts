@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 import TextField from 'material-ui/lib/text-field';
 import Toggle from 'material-ui/lib/toggle';
 import Paper from 'material-ui/lib/paper';
-import Colors from 'material-ui/lib/styles/colors';
+import { Colors } from 'material-ui/lib/styles';
 import TimePicker from 'material-ui/lib/time-picker/time-picker';
 import DatePicker from 'material-ui/lib/date-picker/date-picker';
 import IconButton from 'material-ui/lib/icon-button';
@@ -12,7 +12,7 @@ import RaisedButton from 'material-ui/lib/raised-button';
 
 // import { NavigationService } from '../services/navigation-service';
 // import { ShiftService } from '../services/shift-service';
-// import { FloatingHeader } from './floating-header.jsx';
+import FloatingHeader from './ui/FloatingHeader';
 // import { Shift } from '../models/shift';
 
 import moment from 'moment';
@@ -37,13 +37,13 @@ const SubStyle = {
   padding: '15px'
 };
 
-export default class EditShift extends React.Component {
+export default class EditShift extends Component {
 
-  constructor() {
-    
-    super()
+  constructor(props) {
 
-    if (this.props.shift) {
+    super(props);
+
+    if (props.shift) {
       this.state = {
         shift,
         editing: true
@@ -67,7 +67,7 @@ export default class EditShift extends React.Component {
   }
 
   navBack() {
-    NavigationService.popState();
+    window.history.back();
   }
 
   render() {

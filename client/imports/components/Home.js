@@ -7,6 +7,7 @@ import Paper from 'material-ui/lib/paper';
 import Divider from 'material-ui/lib/divider';
 
 // import { ShiftService } from '../services/shift-service';
+import LeftNavService from '../services/LeftNavService';
 
 // import { EditShift } from './edit-shift.jsx';
 // import { DeliveriesPage } from './deliveries-page.jsx';
@@ -19,6 +20,11 @@ export default class Home extends React.Component {
 
   addShift() {
     FlowRouter.go('/add-shift');
+  }
+
+  openSideNav() {
+    console.log(LeftNavService);
+    LeftNavService.open();
   }
 
   render() {
@@ -44,7 +50,7 @@ export default class Home extends React.Component {
         <AppBar
           title="Shifts"
           iconElementRight={<FlatButton label="Add Shift" onClick={ this.addShift } />}
-          onLeftIconButtonTouchTap={() => this.setState({ open: true })}
+          onLeftIconButtonTouchTap={ this.openSideNav }
           style={{ backgroundColor: Colors.blueGrey900 }}>
         </AppBar>
 

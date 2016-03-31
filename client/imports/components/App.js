@@ -10,10 +10,9 @@ export default class App extends React.Component {
 
   constructor(p) {
     super(p);
-    this.state = {
-      open: false
-    }
   }
+
+
 
   render() {
 
@@ -21,9 +20,9 @@ export default class App extends React.Component {
       <div>
 
         <LeftNav
-          docked={false}
-          open={this.state.open}
-          onRequestChange={open => this.setState({ open })}
+          docked={ false }
+          open={ this.props.open }
+          onRequestChange={ open => this.setState({ open }) }
           style={{ backgroundColor: Colors.grey200 }}>
           <AppBar style={{ backgroundColor: Colors.blueGrey900 }} showMenuIconButton={ false } title="Shifts Tip Tracker" />
           <MenuItem onTouchTap={this.handleClose}>Reports</MenuItem>
