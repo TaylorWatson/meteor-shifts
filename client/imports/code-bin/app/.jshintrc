@@ -1,0 +1,11 @@
+{ 
+	"camelcase": true, 
+	"curly": true,
+	"eqeqeq": true,
+	"esnext": true,
+	"browserify": true,
+	"globals": {
+		"JSON": true,
+		"console": true
+	}
+}

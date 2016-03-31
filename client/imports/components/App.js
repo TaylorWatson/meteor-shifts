@@ -1,23 +1,39 @@
 import React from 'react';
 
+import { Colors } from 'material-ui/lib/styles';
+import AppBar from 'material-ui/lib/app-bar';
+import LeftNav from 'material-ui/lib/left-nav';
+import Divider from 'material-ui/lib/divider';
+import MenuItem from 'material-ui/lib/menus/menu-item';
+
 export default class App extends React.Component {
+
+  constructor(p) {
+    super(p);
+    this.state = {
+      open: false
+    }
+  }
 
   render() {
 
-    let style = {
-      margin: '15px',
-      borderRadius: '0'
-    }
-
     return (
-      <div className="ui segment" style={style}>
-        <h1 className="ui dividing header">{ this.props.text || 'Hello World!' }</h1>
+      <div>
 
-        <p>Count: { this.props.count }</p>
+        <LeftNav
+          docked={false}
+          open={this.state.open}
+          onRequestChange={open => this.setState({ open })}
+          style={{ backgroundColor: Colors.grey200 }}>
+          <AppBar style={{ backgroundColor: Colors.blueGrey900 }} showMenuIconButton={ false } title="Shifts Tip Tracker" />
+          <MenuItem onTouchTap={this.handleClose}>Reports</MenuItem>
+          <MenuItem onTouchTap={this.handleClose}>Settings</MenuItem>
+          <Divider />
+          <MenuItem onTouchTap={this.handleClose}>About Us</MenuItem>
+        </LeftNav>
 
-        <div className="ui right aligned basic segment">
-          <div className="ui blue basic button" onClick={ this.props.increment }>Click Me!</div>
-        </div>
+        { this.props.content }
+
       </div>
     );
 

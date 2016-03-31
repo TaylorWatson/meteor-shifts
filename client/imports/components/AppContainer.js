@@ -1,8 +1,8 @@
 import { createContainer } from 'meteor/react-meteor-data';
 import App from './App';
-import Score from '../../../lib/Score.import';
+import Score from '../../../lib/imports/Score';
 
-export default createContainer((props) => {
+export default createContainer(({ content }) => {
   const score = Score.findOne();
   const count = score ? score.count : 0;
 
@@ -11,5 +11,5 @@ export default createContainer((props) => {
     Score.update(_id, { $inc: { count: 1 } });
   }
 
-  return { count, increment }
+  return { count, increment, content }
 }, App);
