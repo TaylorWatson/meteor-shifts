@@ -25,6 +25,5 @@ flemay:less-autoprefixer
 
 kadira:flow-router
 react-meteor-data
-meteortoys:allthings
 
 ground:db

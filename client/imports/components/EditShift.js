@@ -55,6 +55,10 @@ export default class EditShift extends Component {
       }
     }
 
+    this.saveClicked = this.saveClicked.bind(this);
+    this.changeHandler = this.changeHandler.bind(this);
+    this.handleDateTimeChange = this.handleDateTimeChange.bind(this);
+
   }
 
   changeHandler(event) {
@@ -66,8 +70,68 @@ export default class EditShift extends Component {
     this.setState({ shift });
   }
 
+  saveClicked(event) {
+    let { shift } = this.state;
+
+    shift.validate((err) => {
+      if (err) {
+        this.setState({ err });
+      } else {
+        if (shift.id) {
+          ShiftService.update(shift, () => {
+            NavigationService.popState();
+          })
+        } else {
+          ShiftService.insert(shift, () => {
+            NavigationService.popState();
+          });
+        }
+      }
+    });
+  }
+
   navBack() {
     window.history.back();
+  }
+
+  handleDateTimeChange(procedure) {
+    let [ field, action ] = procedure.split(':');
+
+    return (err, newDate) => {
+      let { shift } = this.state;
+
+      shift[field] = (moment(new Date(newDate)).set(
+        action == 'date' ?
+        {
+          year: newDate.getFullYear(),
+          month: newDate.getMonth(),
+          date: newDate.getDate()
+        } :
+        {
+          hour: newDate.getHours(),
+          minute: newDate.getMinutes(),
+          second: newDate.getSeconds(),
+          millisecond: newDate.getMilliseconds()
+        }
+      )).toDate();
+
+      this.setState({ shift });
+    }
+  }
+
+  fixBeforeAfter(shift) {
+    let { startTime, endTime } = shift;
+    startTime = moment(new Date(startTime));
+    endTime = moment(new Date(endTime));
+
+    if (endTime.isBefore(startTime)) {
+      endTime.add({ days: 1 });
+    }
+
+    return {
+      sTime: startTime.toDate(),
+      eTime: endTime.toDate()
+    }
   }
 
   render() {
@@ -93,19 +157,20 @@ export default class EditShift extends Component {
             <DatePicker
               hintText="Start Date"
               defaultDate={ this.state.editing ? new Date(shift.startTime) : new Date() }
-              onChange={ this.startDateChanged } />
+              value={ shift.startTime }
+              onChange={ this.handleDateTimeChange('startTime:date') } />
             <TimePicker
               ref="startTime"
               format="ampm"
               hintText="Start Time"
-              defaultTime={ this.state.editing ? new Date(shift.startTime) : new Date() }
-              onChange={ this.startTimeChanged } />
+              value={ shift.startTime }
+              onChange={ this.handleDateTimeChange('startTime:time') } />
             <TimePicker
               ref="endTime"
               format="ampm"
               hintText="End Time"
-              defaultTime={ this.state.editing ? new Date(shift.endTime) : new Date() }
-              onChange={ this.endTimeChanged } />
+              value={ shift.endTime }
+              onChange={ this.handleDateTimeChange('endTime:time') } />
           </Paper>
           <RaisedButton label="Save" onMouseUp={ this.saveClicked } style={ SaveButton } />
         </Paper>
@@ -113,94 +178,6 @@ export default class EditShift extends Component {
 
       </div>
     );
-  }
-
-
-  //you can console get and set but not set startTime .. wtf.
-  startTimeChanged(err, newDate) {
-    let startTime = new Date(this.state.shift.startTime);
-
-    startTime.setMinutes(newDate.getMinutes());
-    startTime.setHours(newDate.getHours());
-    startTime.setSeconds(newDate.getSeconds());
-
-    shift.startTime = startTime.toDate();
-    let { eTime, sTime } = this.fixBeforeAfter(shift);
-    shift.endTime = eTime;
-    shift.startTime = sTime;
-    this.setState({ shift });
-  }
-
-  endTimeChanged(err, newDate) {
-    let { shift } = this.state;
-    let endTime = new Date(shift.endTime);
-
-    endTime.setMinutes(newDate.getMinutes());
-    endTime.setHours(newDate.getHours());
-    endTime.setSeconds(newDate.getSeconds());
-
-    shift.endTime = endTime;
-    let { eTime, sTime } = this.fixBeforeAfter(shift);
-    shift.endTime = eTime;
-    shift.startTime = sTime;
-    this.setState({ shift });
-  }
-
-  startDateChanged(err, newDate) {
-    let { shift } = this.state;
-    let startTime = new Date(shift.startTime);
-    let endTime = new Date(shift.endTime);
-
-    startTime.setFullYear(newDate.getFullYear()); // => 2016
-    startTime.setMonth(newDate.getMonth()); // => 7
-    startTime.setDate(newDate.getDate()); // -> 23
-    endTime.setFullYear(newDate.getFullYear()); // => 2016
-    endTime.setMonth(newDate.getMonth()); // => 7
-    endTime.setDate(newDate.getDate()); // -> 23
-
-    shift.startTime = startTime;
-    shift.endTime = endTime;
-
-    let { eTime, sTime } = this.fixBeforeAfter(shift);
-    shift.endTime = eTime;
-    shift.startTime = sTime;
-    this.setState({ shift }); // -> another es6 shorthand for { shift: shift }
-
-  }
-
-  fixBeforeAfter(shift) {
-    let { startTime, endTime } = shift;
-    startTime = moment(new Date(startTime));
-    endTime = moment(new Date(endTime));
-
-    if (endTime.isBefore(startTime)) {
-      endTime.add({ days: 1 });
-    }
-
-    return {
-      sTime: startTime.toDate(),
-      eTime: endTime.toDate()
-    }
-  }
-
-  saveClicked(event) {
-    let { shift } = this.state;
-
-    shift.validate((err) => {
-      if (err) {
-        this.setState({ err });
-      } else {
-        if (shift.id) {
-          ShiftService.update(shift, () => {
-            NavigationService.popState();
-          })
-        } else {
-          ShiftService.insert(shift, () => {
-            NavigationService.popState();
-          });
-        }
-      }
-    });
   }
 }
 
