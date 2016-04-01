@@ -65,7 +65,10 @@ export default class EditShift extends Component {
   saveClicked() {
     let { shift } = this.state;
 
+    shift = new Shift(shift);
+
     var result = shift.validate(err => {
+      console.log('Validated!');
       if (err) {
       } else {
         let _id = Shifts.insert(shift.raw());
