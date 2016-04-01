@@ -7,11 +7,15 @@ class LeftNavService {
     return this.open.get();
   }
 
-  open() {
+  set(value) {
+    this.open.set(value);
+  }
+
+  openMenu() {
     this.open.set(true);
   }
 
-  close() {
+  closeMenu() {
     this.open.set(false);
   }
 }

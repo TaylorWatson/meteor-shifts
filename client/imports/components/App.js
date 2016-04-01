@@ -6,13 +6,13 @@ import LeftNav from 'material-ui/lib/left-nav';
 import Divider from 'material-ui/lib/divider';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 
+import LeftNavService from '../services/LeftNavService';
+
 export default class App extends React.Component {
 
   constructor(p) {
     super(p);
   }
-
-
 
   render() {
 
@@ -22,7 +22,7 @@ export default class App extends React.Component {
         <LeftNav
           docked={ false }
           open={ this.props.open }
-          onRequestChange={ open => this.setState({ open }) }
+          onRequestChange={ req => LeftNavService.set(req) }
           style={{ backgroundColor: Colors.grey200 }}>
           <AppBar style={{ backgroundColor: Colors.blueGrey900 }} showMenuIconButton={ false } title="Shifts Tip Tracker" />
           <MenuItem onTouchTap={this.handleClose}>Reports</MenuItem>

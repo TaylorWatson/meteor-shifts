@@ -23,8 +23,7 @@ export default class Home extends React.Component {
   }
 
   openSideNav() {
-    console.log(LeftNavService);
-    LeftNavService.open();
+    LeftNavService.openMenu();
   }
 
   render() {

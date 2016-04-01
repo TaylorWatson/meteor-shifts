@@ -115,6 +115,9 @@ export default class EditShift extends Component {
         }
       )).toDate();
 
+      let { eTime, sTime } = this.fixBeforeAfter(shift);
+      shift.startTime = sTime;
+      if (shift.endTime) shift.endTime = eTime;
       this.setState({ shift });
     }
   }
