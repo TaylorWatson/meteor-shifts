@@ -28,3 +28,5 @@ react-meteor-data
 
 ground:db
 jagi:astronomy@2.0.0-rc.7
+
+semantic:ui
