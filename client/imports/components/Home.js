@@ -7,7 +7,7 @@ import Paper from 'material-ui/lib/paper';
 import Divider from 'material-ui/lib/divider';
 
 // import { ShiftService } from '../services/shift-service';
-import LeftNavOpen from '../reactive-vars/LeftNavOpen';
+// import LeftNavOpen from '../reactive-vars/LeftNavOpen';
 
 // import { EditShift } from './edit-shift.jsx';
 // import { DeliveriesPage } from './deliveries-page.jsx';
@@ -23,7 +23,7 @@ export default class Home extends React.Component {
   }
 
   openSideNav() {
-    LeftNavOpen.set(true);
+    // LeftNavOpen.set(true);
   }
 
   render() {
@@ -46,12 +46,12 @@ export default class Home extends React.Component {
     return (
       <div>
 
-        <AppBar
+        {/*<AppBar
           title="Shifts"
           iconElementRight={<FlatButton label="Add Shift" onClick={ this.addShift } />}
           onLeftIconButtonTouchTap={ this.openSideNav }
           style={{ backgroundColor: Colors.blueGrey900 }}>
-        </AppBar>
+        </AppBar>*/}
 
         <Paper style={{ maxHeight: '60vh', overflowY: 'auto', backgroundColor: Colors.grey100 }}>
           <h3 style={{ padding: '15px' }}>Upcoming Shifts</h3>

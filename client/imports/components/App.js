@@ -1,35 +1,63 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 import { Colors } from 'material-ui/lib/styles';
-import AppBar from 'material-ui/lib/app-bar';
-import LeftNav from 'material-ui/lib/left-nav';
-import Divider from 'material-ui/lib/divider';
-import MenuItem from 'material-ui/lib/menus/menu-item';
+// import AppBar from 'material-ui/lib/app-bar';
+// import LeftNav from 'material-ui/lib/left-nav';
+// import Divider from 'material-ui/lib/divider';
+// import MenuItem from 'material-ui/lib/menus/menu-item';
+//
+import DehazeIcon from 'material-ui/lib/svg-icons/image/dehaze';
 
-import LeftNavOpen from '../reactive-vars/LeftNavOpen';
+import title from '../reactive-vars/Title';
 
-export default class App extends React.Component {
+export default class App extends Component {
 
   constructor(p) {
     super(p);
   }
 
+  componentDidMount() {
+    $(this.refs.newTest).sideNav();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('wcrp');
+    console.log('next: ', nextProps, ' current: ', this.props);
+
+    if (nextProps.open !== this.props.open) {
+      this.refs.sideNav.toggle();
+    }
+  }
+
   render() {
+
+    iconStyle = {
+      transform: 'scale(2.2, 1.5)',
+      marginTop: '17px'
+    }
 
     return (
       <div>
 
-        <LeftNav
-          docked={ false }
-          open={ this.props.open }
-          onRequestChange={ req => LeftNavOpen.set(req) }
-          style={{ backgroundColor: Colors.grey200 }}>
-          <AppBar style={{ backgroundColor: Colors.blueGrey900 }} showMenuIconButton={ false } title="Shifts Tip Tracker" />
-          <MenuItem onTouchTap={this.handleClose}>Reports</MenuItem>
-          <MenuItem onTouchTap={this.handleClose}>Settings</MenuItem>
-          <Divider />
-          <MenuItem onTouchTap={this.handleClose}>About Us</MenuItem>
-        </LeftNav>
+        <nav className="blue-grey darken-4">
+          <div className="nav-wrapper">
+            <a href="#" className="brand-logo">{ this.props.title }</a>
+            <a href="#" data-activates="mobile-demo" ref="newTest" style={{ marginLeft: '19px' }} className="button-collapse waves-effect default"><DehazeIcon color={ "white" } style={ iconStyle } /></a>
+            <a href="/shifts" className="right waves-effect default" style={{ marginRight: '15px' }} >Add Shift</a>
+            <ul className="right hide-on-med-and-down">
+              <li><a href="#">Reporting</a></li>
+              <li><a href="#">Set metrics</a></li>
+              <li><a href="#">Help and feedback</a></li>
+              <li><a href="#">Rate the app</a></li>
+            </ul>
+            <ul className="side-nav" id="mobile-demo">
+              <li><a href="#">Reporting</a></li>
+              <li><a href="#">Set metrics</a></li>
+              <li><a href="#">Help and feedback</a></li>
+              <li><a href="#">Rate the app</a></li>
+            </ul>
+          </div>
+        </nav>
 
         { this.props.content }
 

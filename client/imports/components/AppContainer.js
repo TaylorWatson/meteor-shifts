@@ -1,11 +1,11 @@
 import { createContainer } from 'meteor/react-meteor-data';
 import App from './App';
-import LeftNavOpen from '../reactive-vars/LeftNavOpen';
+import Title from '../reactive-vars/Title';
 
 export default createContainer(({ content }) => {
 
-  let open = LeftNavOpen.get();
+  let title = Title.get();
 
-  return { content, open }
+  return { content, title }
 
 }, App);
