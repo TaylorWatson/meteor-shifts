@@ -2,7 +2,7 @@ import React from 'react';
 import TextField from 'material-ui/lib/text-field';
 import Toggle from 'material-ui/lib/toggle';
 import Paper from 'material-ui/lib/paper';
-import { Shift } from '../models/shift';
+// import { Shift } from '../models/shift';
 import Colors from 'material-ui/lib/styles/colors';
 import { FloatingHeader } from './floating-header.jsx';
 import TimePicker from 'material-ui/lib/time-picker/time-picker';
