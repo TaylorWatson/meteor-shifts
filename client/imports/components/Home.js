@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import { Colors } from 'material-ui/lib/styles';
 import AppBar from 'material-ui/lib/app-bar';
@@ -11,7 +11,7 @@ import LeftNavOpen from '../reactive-vars/LeftNavOpen';
 
 // import { EditShift } from './edit-shift.jsx';
 // import { DeliveriesPage } from './deliveries-page.jsx';
-// import ShiftCard from './shift-card.jsx';
+import ShiftCard from './ui/ShiftCard';
 
 import _ from 'lodash';
 import moment from 'moment';
@@ -31,9 +31,9 @@ export default class Home extends React.Component {
 
     if (this.props.shifts.length) {
 
-      let currentlyClockedIn = !!_.find(this.state.shifts, s => (s.clockInTime !== "undefined" && s.clockOutTime == "undefined"));
+      let currentlyClockedIn = !!_.find(this.props.shifts, s => (s.clockInTime !== "undefined" && s.clockOutTime == "undefined"));
 
-      shiftList = this.state.shifts.map((shift, i) => (
+      shiftList = this.props.shifts.map((shift, i) => (
         <ShiftCard
           shift={ shift }
           currentlyClockedIn={ currentlyClockedIn }
@@ -61,4 +61,8 @@ export default class Home extends React.Component {
       </div>
     );
   }
+}
+
+Home.propTypes = {
+  shifts: PropTypes.array.isRequired
 }
