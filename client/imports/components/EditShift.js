@@ -13,7 +13,7 @@ import RaisedButton from 'material-ui/lib/raised-button';
 // import { NavigationService } from '../services/navigation-service';
 // import { ShiftService } from '../services/shift-service';
 import FloatingHeader from './ui/FloatingHeader';
-// import { Shift } from '../models/shift';
+import Shift from '../models/Shift';
 
 import moment from 'moment';
 
@@ -44,7 +44,7 @@ export default class EditShift extends Component {
     super(props);
 
     this.state = {
-      shift: props.shift || {}
+      shift: new Shift(props.shift || {})
     }
 
     this.saveClicked = this.saveClicked.bind(this);
@@ -65,21 +65,12 @@ export default class EditShift extends Component {
   saveClicked() {
     let { shift } = this.state;
 
-    shift.validate((err) => {
-      if (err) {
-        this.setState({ err });
-      } else {
-        if (shift.id) {
-          ShiftService.update(shift, () => {
-            NavigationService.popState();
-          })
-        } else {
-          ShiftService.insert(shift, () => {
-            NavigationService.popState();
-          });
-        }
-      }
-    });
+    if (shift.validate()) {
+      shift.save();
+      FlowRouter.go('/');
+    } else {
+      this.setState({ errors: shift.errors });
+    }
   }
 
   navBack() {
