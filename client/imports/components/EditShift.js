@@ -13,7 +13,7 @@ import RaisedButton from 'material-ui/lib/raised-button';
 // import { NavigationService } from '../services/navigation-service';
 // import { ShiftService } from '../services/shift-service';
 import FloatingHeader from './ui/FloatingHeader';
-import Shift from '../models/Shift';
+import { Shift, Shifts } from '../../../lib/imports/collections/Shifts';
 
 import moment from 'moment';
 
@@ -65,12 +65,14 @@ export default class EditShift extends Component {
   saveClicked() {
     let { shift } = this.state;
 
-    if (shift.validate()) {
-      shift.save();
-      FlowRouter.go('/');
-    } else {
-      this.setState({ errors: shift.errors });
-    }
+    var result = shift.validate(err => {
+      if (err) {
+      } else {
+        let _id = Shifts.insert(shift.raw());
+        FlowRouter.go('/');
+      }
+    });
+
   }
 
   navBack() {

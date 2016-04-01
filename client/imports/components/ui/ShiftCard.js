@@ -1,20 +1,19 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
 import Card from 'material-ui/lib/card/card';
 import CardActions from 'material-ui/lib/card/card-actions';
 import CardHeader from 'material-ui/lib/card/card-header';
 import FlatButton from 'material-ui/lib/flat-button';
 import CardText from 'material-ui/lib/card/card-text';
 import moment from 'moment';
-import React, { Component } from 'react';
-import { ShiftService } from '../services/shift-service';
-import { NavigationService } from '../services/navigation-service';
-import { EditShift } from './edit-shift.jsx';
-import { DeliveriesPage } from './deliveries-page.jsx';
+// import { ShiftService } from '../services/shift-service';
+// import { NavigationService } from '../services/navigation-service';
+import { EditShift } from '../EditShift';
+// import { DeliveriesPage } from './deliveries-page.jsx';
 
 export default class ShiftCard extends Component {
 
   edit() {
-    NavigationService.pushState(<EditShift shift={ this.props.shift }/>);
+    FlowRouter.go(`/shifts/${this.props.shift._id}`);
   }
 
   start() {

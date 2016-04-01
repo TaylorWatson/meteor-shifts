@@ -14,8 +14,20 @@ FlowRouter.route('/', {
   }
 });
 
-FlowRouter.route('/add-shift', {
+FlowRouter.route('/shifts', {
   action() {
-    mount(App, { content: <EditShift /> });
+    mount(App, { content: <EditShift isNew={ true } /> });
+  }
+});
+
+FlowRouter.route('/shifts/:shiftId', {
+  action(params) {
+    mount(App, { content: <EditShift shiftId={ params.shiftId } /> });
+  }
+})
+
+FlowRouter.route('/deliveries/:shiftId', {
+  action(params) {
+
   }
 });

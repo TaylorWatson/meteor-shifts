@@ -19,7 +19,7 @@ import moment from 'moment';
 export default class Home extends React.Component {
 
   addShift() {
-    FlowRouter.go('/add-shift');
+    FlowRouter.go('/shifts');
   }
 
   openSideNav() {
@@ -38,7 +38,7 @@ export default class Home extends React.Component {
           shift={ shift }
           currentlyClockedIn={ currentlyClockedIn }
           onClick={ this.selectShift }
-          key={ shift.id } />
+          key={ shift._id } />
       ));
 
     }
