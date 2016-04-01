@@ -43,16 +43,8 @@ export default class EditShift extends Component {
 
     super(props);
 
-    if (props.shift) {
-      this.state = {
-        shift,
-        editing: true
-      }
-    } else {
-      this.state = {
-        shift: {},
-        editing: false
-      }
+    this.state = {
+      shift: props.shift || {}
     }
 
     this.saveClicked = this.saveClicked.bind(this);
@@ -70,7 +62,7 @@ export default class EditShift extends Component {
     this.setState({ shift });
   }
 
-  saveClicked(event) {
+  saveClicked() {
     let { shift } = this.state;
 
     shift.validate((err) => {
@@ -183,6 +175,3 @@ export default class EditShift extends Component {
     );
   }
 }
-
-export { EditShift }
-

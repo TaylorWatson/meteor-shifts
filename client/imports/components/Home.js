@@ -7,7 +7,7 @@ import Paper from 'material-ui/lib/paper';
 import Divider from 'material-ui/lib/divider';
 
 // import { ShiftService } from '../services/shift-service';
-import LeftNavService from '../services/LeftNavService';
+import LeftNavOpen from '../reactive-vars/LeftNavOpen';
 
 // import { EditShift } from './edit-shift.jsx';
 // import { DeliveriesPage } from './deliveries-page.jsx';
@@ -23,7 +23,7 @@ export default class Home extends React.Component {
   }
 
   openSideNav() {
-    LeftNavService.openMenu();
+    LeftNavOpen.set(true);
   }
 
   render() {
