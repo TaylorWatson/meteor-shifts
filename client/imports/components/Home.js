@@ -1,32 +1,40 @@
-import React, { PropTypes } from 'react';
-
-import { Colors } from 'material-ui/lib/styles';
-import AppBar from 'material-ui/lib/app-bar';
-import FlatButton from 'material-ui/lib/flat-button';
-import Paper from 'material-ui/lib/paper';
-import Divider from 'material-ui/lib/divider';
+import React, { Component, PropTypes } from 'react';
 
 // import { ShiftService } from '../services/shift-service';
-// import LeftNavOpen from '../reactive-vars/LeftNavOpen';
+import Title from '../reactive-vars/Title';
 
 // import { EditShift } from './edit-shift.jsx';
 // import { DeliveriesPage } from './deliveries-page.jsx';
 import ShiftCard from './ui/ShiftCard';
 
+//take out after shiftCards is finished.
+import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert';
+import CloseIcon from 'material-ui/lib/svg-icons/navigation/close';
+
 import _ from 'lodash';
 import moment from 'moment';
 
-export default class Home extends React.Component {
+export default class Home extends Component {
+
+  constructor() {
+    super();
+  }
+
+  componentDidMount() {
+    $(this.refs.test).sideNav();
+  }
+
 
   addShift() {
     FlowRouter.go('/shifts');
   }
 
-  openSideNav() {
-    // LeftNavOpen.set(true);
-  }
+  // openSideNav() {
+  //   LeftNavOpen.set(true);
+  // }
 
   render() {
+
     let shiftList;
 
     if (this.props.shifts.length) {
@@ -46,18 +54,43 @@ export default class Home extends React.Component {
     return (
       <div>
 
-        {/*<AppBar
-          title="Shifts"
-          iconElementRight={<FlatButton label="Add Shift" onClick={ this.addShift } />}
-          onLeftIconButtonTouchTap={ this.openSideNav }
-          style={{ backgroundColor: Colors.blueGrey900 }}>
-        </AppBar>*/}
+        { shiftList }
 
-        <Paper style={{ maxHeight: '60vh', overflowY: 'auto', backgroundColor: Colors.grey100 }}>
-          <h3 style={{ padding: '15px' }}>Upcoming Shifts</h3>
-          { shiftList }
-        </Paper>
+        <div className='card grey lighten-4 row waves-effect waves-block default' style={{ margin: '10px 10px 10px 10px' }}>
+          <div className='card-content'>
+            <h5 className='activator'>Sunday the 5th<MoreVertIcon className='activator right' color={ "black" } /></h5>
+            <p>Shift Title: Chicken <br /> Shift location: Butt</p>
+          </div>
+          <div className='card-reveal'>
+            <span className='card-title' style={{ margin: '5px' }}><CloseIcon className='right card-title' color={ "black" } /></span>
+            <a className="waves-effect waves-light btn" key={ 1 } style={{ margin: '0 0 10px 0' }} >Resume Shift</a><br />
+            <a className="waves-effect waves-light btn" key={ 2 } >End Shift</a>
+          </div>
+        </div>
 
+        <div className='card grey lighten-4 row waves-effect waves-block default' style={{ margin: '10px 10px 10px 10px' }}>
+          <div className='card-content'>
+            <h5 className='activator'>Sunday the 5th<MoreVertIcon className='activator right' color={ "black" } /></h5>
+            <p>Shift Title: Chicken <br /> Shift location: Butt</p>
+          </div>
+          <div className='card-reveal'>
+            <span className='card-title' style={{ margin: '5px' }}><CloseIcon className='right card-title' color={ "black" } /></span>
+            <a className="waves-effect waves-light btn" key={ 1 } style={{ margin: '0 0 10px 0' }} >Resume Shift</a><br />
+            <a className="waves-effect waves-light btn" key={ 2 } >End Shift</a>
+          </div>
+        </div>
+
+        <div className='card grey lighten-4 row waves-effect waves-block default' style={{ margin: '10px 10px 10px 10px' }}>
+          <div className='card-content'>
+            <h5 className='activator'>Sunday the 5th<MoreVertIcon className='activator right' color={ "black" } /></h5>
+            <p>Shift Title: Chicken <br /> Shift location: Butt</p>
+          </div>
+          <div className='card-reveal'>
+            <span className='card-title' style={{ margin: '5px' }}><CloseIcon className='right card-title' color={ "black" } /></span>
+            <a className="waves-effect waves-light btn" key={ 1 } style={{ margin: '0 0 10px 0' }} >Resume Shift</a><br />
+            <a className="waves-effect waves-light btn" key={ 2 } >End Shift</a>
+          </div>
+        </div>
       </div>
     );
   }

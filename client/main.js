@@ -1,6 +1,7 @@
 import App from './imports/components/AppContainer';
 import Home from './imports/components/HomeContainer';
 import EditShift from './imports/components/EditShiftContainer';
+import DeliverySingle from './imports/components/deliveries/DeliverySingle';
 // import DeliveryPage from './imports/components/deliveries/DeliveryPage';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -31,8 +32,9 @@ FlowRouter.route('/shifts/:shiftId', {
   }
 });
 
-// FlowRouter.route('/deliveries/:shiftId', {
-//   action(params) {
-//     mount(App, { content: <DeliveryPage shiftId={ params.shiftId } /> });
-//   }
-// });
+FlowRouter.route('/deliveries', {
+  action(params) {
+    Title.set('Edit Shift');
+    mount(App, { content: <DeliverySingle  /> });
+  }
+});

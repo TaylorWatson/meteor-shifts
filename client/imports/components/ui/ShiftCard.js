@@ -1,9 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import Card from 'material-ui/lib/card/card';
-import CardActions from 'material-ui/lib/card/card-actions';
-import CardHeader from 'material-ui/lib/card/card-header';
-import FlatButton from 'material-ui/lib/flat-button';
-import CardText from 'material-ui/lib/card/card-text';
 import moment from 'moment';
 // import { ShiftService } from '../services/shift-service';
 // import { NavigationService } from '../services/navigation-service';
@@ -34,31 +29,38 @@ export default class ShiftCard extends Component {
 
   render() {
 
-    let { shift, currentlyClockedIn } = this.props;
+    // let { shift, currentlyClockedIn } = this.props;
 
-    let { startTime, clockOutTime, clockInTime, endTime, title, location } = shift;
+    // let { startTime, clockOutTime, clockInTime, endTime, title, location } = shift;
 
-    startTime = moment(startTime);
+    // startTime = moment(startTime);
 
-    let day = `${moment(new Date(startTime)).format('dddd [the] Do [at] h:mm a')} to ${moment(new Date(endTime)).format('h:mm a')}`;
+    // let day = `${moment(new Date(startTime)).format('dddd [the] Do [at] h:mm a')} to ${moment(new Date(endTime)).format('h:mm a')}`;
 
-    let buttons = [<FlatButton label="Edit Shift" key={1} onClick={ this.edit } />];
+    // let buttons = [<a className="waves-effect waves-light btn" key={ 1 } onClick={ this.edit } >Edit Shift</a>];
 
-    if (!currentlyClockedIn && (moment(new Date(startTime))).isSame(moment(new Date()), 'day'))
-      buttons.push(<FlatButton label="Start Shift" key={2} onClick={ this.start } />);
-    if (clockInTime !== "undefined" && clockOutTime == "undefined")
-      buttons.push(<FlatButton label="Resume Shift" key={3} onClick={ this.resume } />);
+    // if (!currentlyClockedIn && (moment(new Date(startTime))).isSame(moment(new Date()), 'day'))
+    //   buttons.push(<a className="waves-effect waves-light btn" key={ 2 } onClick={ this.start } >Start Shift</a>);
+    // if (clockInTime !== "undefined" && clockOutTime == "undefined")
+    //   buttons.push(<a className="waves-effect waves-light btn" key={ 3 } style={{ margin: '0 0 10px 0' }} onClick={ this.resume }>Resume Shift</a>);
 
     return (
-      <Card style={{ margin: '10px' }}>
-        <CardHeader
-          title={ day }
-          subtitle={ `${title} ${location ? ' - ' + location : ''}` }
-        />
-        <CardActions expandable={false}>
+      <div className='card grey lighten-4 row waves-effect waves-block default' style={{ margin: '10px 10px 10px 10px' }}>
+        <div className='card-content'>
+          <h5 className='activator'>{ day }<MoreVertIcon className='activator right' color={ "black" } /></h5>
+          <p>{`Shift Title: ${ title }${<br />}Shift location: ${ location }`</p>
+        </div>
+        <div className='card-reveal'>
+          <span className='card-title' style={{ margin: '5px' }}><CloseIcon className='right card-title' color={ "black" } /></span>
           { buttons }
-        </CardActions>
-      </Card>
+        </div>
+      </div>
+      <div className='card grey lighten-4' style={{ margin: '10px' }}>
+        <h5>{ day }</h5>
+        <p>{ `${title} ${location ? ' - ' + location : ''}` }</p>
+        {/* make expandable */}
+          { buttons }
+      </div>
     );
 
   }

@@ -26,36 +26,6 @@ import { DeliveryService } from '../services/delivery-service';
 import { NavigationService } from '../services/navigation-service';
 
 
-    // const Style = {
-    //   width: '100%',
-    //   padding: '10px',
-    //   backgroundColor: Colors.blueGrey50,
-    //   height: 'calc(100vh - 64px)',
-    //   display: 'inline-block'
-    // };
-    // const TabStyles = {
-    //    headliine: {
-    //     fontSize: 24,
-    //     paddingTop: 16,
-    //     marginBottom: 12,
-    //     fontWeight: 400,
-    //   },
-    // };
-
-    // const SaveButton = {
-    //   width: '100%',
-    //   height: '50px',
-    //   backgroundColor: Colors.orange500,
-    // };
-
-    // const SubStyle = {
-    //   backgroundColor: Colors.grey100,
-    //   padding: '15px'
-    // };
-
-
-
-
 export default class DeliveryPage extends Component {
 
   constructor(props) {

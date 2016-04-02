@@ -1,39 +1,32 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 
-import Paper from 'material-ui/lib/paper';
-import Colors from 'material-ui/lib/styles/colors';
-import IconButton from 'material-ui/lib/icon-button';
-import RaisedButton from 'material-ui/lib/raised-button';
-import ListItem from 'material-ui/lib/lists/list-item';
-
-import { DeliveryService } from '../services/delivery-service';
+//import { DeliveryService } from '../services/delivery-service';
 // import { FloatingHeader } from './floating-header.jsx';
-import { Delivery } from '../models/deliveries';
+//import { Delivery } from '../models/deliveries';
 
-export default class DeliveryOverviewSingle extends Component {
+export default class DeliverySingle extends Component {
 
 	constructor() {
 		super();
 	}
 
+	componentDidMount() {
+		Materialize.showStaggeredList('#deliveries');
+	}
+
 	render() {
 
 		return(
-			<div>
-			<ListItem
-		          primaryText={ this.props.delivery.deliveryNumber }
-		          secondaryText={
-		          	<p>
-		          	hi
-		              <span >{ this.props.delivery.tipAmount }</span><br />
-		              <span >{ this.props.delivery.paymentType }</span><br />
-		              <span >{ this.props.delivery.deliveryAmount }</span><br />
-		            </p>
-		          }
-		          secondaryTextLines={3}
-		        />
-		        </div>
+			<ul className="collection" id='deliveries'>
+				<li className="collection-item">
+	      		<h5>Delivery Number: #3##</h5>
+			      <p>Tip Amount: $XXX <br />
+			         Payment Type: XXXX <br />
+			         Delivery Amount: XXXXXX
+			      </p>
+			   </li>
+	    	</ul>
 		)
 	}
 }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import '../assets/time-picker/materialize.clockpicker';
 
-
 import moment from 'moment';
 
 export default class EditShift extends Component {
