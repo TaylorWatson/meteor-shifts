@@ -5,6 +5,9 @@ import moment from 'moment';
 import { EditShift } from '../EditShift';
 // import { DeliveriesPage } from './deliveries-page.jsx';
 
+import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert';
+import CloseIcon from 'material-ui/lib/svg-icons/navigation/close';
+
 export default class ShiftCard extends Component {
 
   edit() {
@@ -48,18 +51,12 @@ export default class ShiftCard extends Component {
       <div className='card grey lighten-4 row waves-effect waves-block default' style={{ margin: '10px 10px 10px 10px' }}>
         <div className='card-content'>
           <h5 className='activator'>{ day }<MoreVertIcon className='activator right' color={ "black" } /></h5>
-          <p>{`Shift Title: ${ title }${<br />}Shift location: ${ location }`</p>
+          <p>{`Shift Title: ${ title }${<br />}Shift location: ${ location }`}</p>
         </div>
         <div className='card-reveal'>
           <span className='card-title' style={{ margin: '5px' }}><CloseIcon className='right card-title' color={ "black" } /></span>
           { buttons }
         </div>
-      </div>
-      <div className='card grey lighten-4' style={{ margin: '10px' }}>
-        <h5>{ day }</h5>
-        <p>{ `${title} ${location ? ' - ' + location : ''}` }</p>
-        {/* make expandable */}
-          { buttons }
       </div>
     );
 
