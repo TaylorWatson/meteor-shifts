@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import _ from 'lodash';
 
+import Shift from '../models/Shift';
+
 import TimePicker from './ui/TimePicker';
 import DatePicker from './ui/DatePicker';
 
@@ -13,16 +15,12 @@ export default class EditShift extends Component {
     super(props);
 
     this.state = {
-      shift: props.shift || {}
+      shift: new Shift(props.shift || {})
     }
 
     this.saveClicked = this.saveClicked.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleDateTimeChange = this.handleDateTimeChange.bind(this);
-  }
-
-  componentDidMount() {
-    
   }
 
   handleChange(event) {
@@ -31,31 +29,66 @@ export default class EditShift extends Component {
 
     shift[name] = value;
 
+    console.log(shift);
     this.setState({ shift });
   }
 
   saveClicked() {
     let { shift } = this.state;
 
-    shift = new Shift(shift);
-
-    var result = shift.validate(err => {
-      console.log('Validated!');
+    shift.save(err => {
       if (err) {
+        Materialize.toast(err, 3000, 'red');
       } else {
-        let _id = Shifts.insert(shift.raw());
         FlowRouter.go('/');
       }
-    });
+    })
   }
 
   navBack() {
     window.history.back();
   }
 
-  handleDateTimeChange(event) {
-    console.log('date time changed!');
-    console.log(_.clone(event));
+  handleDateTimeChange(e) {
+    let { shift } = this.state;
+    if (e.target.value.date) {
+      let { startTime, endTime } = shift;
+
+      if (startTime) {
+        startTime.set(e.target.value);
+        startTime = moment(new Date(startTime));
+      } else {
+        startTime = moment(new Date());
+        startTime.set(e.target.value);
+      }
+
+      shift.startTime = startTime.toDate();
+
+      if (endTime) {
+        endTime = moment(new Date(endTime));
+        endTime.set(e.target.value);
+        shift.endTime = endTime.toDate();
+      }
+    } else {
+      let obj = shift[e.target.name];
+      let newDate = new Date(obj ? obj : new Date());
+      let time = moment(newDate);
+      let adjustedTime = time.set(e.target.value);
+      let value = adjustedTime.toDate();
+      shift[e.target.name] = value;
+    }
+
+    let { eTime, sTime } = this.fixBeforeAfter(shift);
+    if (shift.startTime) {
+      shift.startTime = sTime;
+    }
+    if (shift.endTime) {
+      shift.endTime = eTime;
+    }
+
+    console.log(shift);
+
+    this.setState({ shift });
   }
 
   fixBeforeAfter(shift) {
@@ -97,6 +130,8 @@ export default class EditShift extends Component {
           <label htmlFor="endTime">End Time</label>
           <TimePicker name="endTime" value={ shift.endTime } onChange={ this.handleDateTimeChange } />
         </div>
+
+        <div style={{ width: '100%' }} className="waves-effect waves-light btn blue-grey" onClick={ this.saveClicked }>Save</div>
       </div>
     );
   }

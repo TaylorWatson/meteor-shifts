@@ -6,10 +6,15 @@ import DeliverySingle from './imports/components/deliveries/DeliverySingle';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount } from 'react-mounter';
-import Meteor from 'meteor/meteor';
+import { Meteor } from 'meteor/meteor';
 import Title from './imports/reactive-vars/Title';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import { DatabaseService } from './imports/services/DatabaseService';
 injectTapEventPlugin();
+
+Meteor.startup(() => {
+  DatabaseService.init();
+});
 
 FlowRouter.route('/', {
   action() {

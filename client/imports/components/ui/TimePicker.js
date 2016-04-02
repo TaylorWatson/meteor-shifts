@@ -1,5 +1,6 @@
 import '../../assets/time-picker/materialize.clockpicker';
 import React, { Component, PropTypes } from 'react';
+import moment from 'moment';
 
 export default class TimePicker extends Component {
   constructor() {
@@ -14,19 +15,40 @@ export default class TimePicker extends Component {
       donetext: 'Done',
       afterDone: this.timeDone
     });
-
-    if (this.props.value) {
-      // set the value for editing purposes.
-    }
   }
 
   timeDone() {
-    console.log('Time picked!', $(this.refs.timeInput).val());
+    let timeString = $(this.refs.timeInput).val();
+
+    let [ hours, minutes ] = timeString.split(":");
+    hours = new Number(hours).valueOf();
+    let a = minutes.substr(2, 2);
+    minutes = new Number(minutes.substr(0, 2)).valueOf();
+
+    if (a == "PM" && hours !== 12) {
+      hours += 12;
+    }
+
+    this.props.onChange({ 
+      target: { 
+        name: this.props.name, 
+        value: {
+          hour: hours,
+          minute: new Number(minutes).valueOf(),
+          second: 0,
+          millisecond: 0
+        }
+      }
+    });
   }
 
   render() {
+    let value = '';
+    if (this.props.value) {
+      value = moment(new Date(this.props.value)).format('hh:mmA');
+    }
     return (
-      <input id={ this.props.name } name={ this.props.name } ref='timeInput' className="timepicker" type="text" />
+      <input id={ this.props.name } name={ this.props.name } value={ value } ref='timeInput' className="timepicker" type="text" />
     )
   }
 }
@@ -34,5 +56,5 @@ export default class TimePicker extends Component {
 TimePicker.propTypes = {
   onChange: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
-  value: PropTypes.string
+  value: PropTypes.object
 }

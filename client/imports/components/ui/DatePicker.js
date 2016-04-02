@@ -2,7 +2,9 @@ import React, { Component, PropTypes } from 'react';
 
 export default class DatePicker extends Component {
   constructor() {
-    super()
+    super();
+
+    this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
@@ -10,14 +12,24 @@ export default class DatePicker extends Component {
     $(this.refs.datePicker).pickadate({
       selectMonths: true, // Creates a dropdown to control month
       selectYears: 15, // Creates a dropdown of 15 years to control year
-      
+      onClose: this.handleChange
     });
 
   }
 
   handleChange(newDate) {
-    console.log('Date changed!');
-    console.log(arguments);
+    let date = new Date($(this.refs.datePicker).val());
+    
+    this.props.onChange({
+      target: {
+        name: this.props.name,
+        value: {
+          year: date.getFullYear(),
+          month: date.getMonth(),
+          date: date.getDate()
+        }
+      }
+    });
   }
 
   render() {
