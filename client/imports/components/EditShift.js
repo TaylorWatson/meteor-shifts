@@ -7,6 +7,7 @@ import Shift from '../models/Shift';
 
 import TimePicker from './ui/TimePicker';
 import DatePicker from './ui/DatePicker';
+import InputField from './ui/InputField';
 
 export default class EditShift extends Component {
 
@@ -89,14 +90,20 @@ export default class EditShift extends Component {
   render() {
     if (!this.state) return <p className="flow-text">Loading ...</p>;
     let shift = this.state.shift;
-    console.log(shift);
     return (
       <div className="container" style={{ paddingTop: '15px' }}>
 
-        <div className="input-field">
-          <label htmlFor="title">Title</label>
-          <input id="title" name="title" value={ shift.value } onChange={ this.handleChange } type="text"/>
-        </div>
+        <InputField
+          label="Title"
+          name="title"
+          onChange={ this.handleChange }
+          value={ shift.title } />
+
+        <InputField
+          label="Location"
+          name="location"
+          onChange={ this.handleChange }
+          value={ shift.location } />
 
         <DatePicker
           name="startTime"
