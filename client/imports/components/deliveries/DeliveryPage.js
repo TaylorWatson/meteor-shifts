@@ -1,35 +1,14 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 
-// import TextField from 'material-ui/lib/text-field';
-// import Toggle from 'material-ui/lib/toggle';
-// import Paper from 'material-ui/lib/paper';
-// import Colors from 'material-ui/lib/styles/colors';
-// import SelectField from 'material-ui/lib/select-field';
-// import MenuItem from 'material-ui/lib/menus/menu-item';
-// import IconButton from 'material-ui/lib/icon-button';
-// import Tabs from 'material-ui/lib/tabs/tabs';
-// import Tab from 'material-ui/lib/tabs/tab';
-// import RaisedButton from 'material-ui/lib/raised-button';
-// import Dialog from 'material-ui/lib/dialog';
-// import FlatButton from 'material-ui/lib/flat-button';
-// import KeyboardArrowLeft from 'material-ui/lib/svg-icons/hardware/keyboard-arrow-left';
-// import WatchLaterIcon from 'material-ui/lib/svg-icons/action/watch-later';
-// import { FloatingHeader } from './floating-header.jsx';
-// import AppBar from 'material-ui/lib/app-bar';
-
-import DeliveryInput from './DeliveryInput';
-import DeliverySingle from './DeliverySingle';
-
-import { Delivery } from '../models/deliveries';
-import { DeliveryService } from '../services/delivery-service';
-import { NavigationService } from '../services/navigation-service';
-
+import ErrorHandler from '../../services/ErrorHandler';
+import DatabaseService from '../../services/DatabaseService';
+import Delivery from '../../models/Delivery';
 
 export default class DeliveryPage extends Component {
 
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     this.state = {
       value: 0,
@@ -43,7 +22,7 @@ export default class DeliveryPage extends Component {
   }
 
   componentDidMount(){
-    this.deliveryList();
+    //this.deliveryList();
   }
 
   handleTabChange(value) {
@@ -51,19 +30,19 @@ export default class DeliveryPage extends Component {
   }
 
   deliveryList() {
-    DeliveryService.deliveryList(this.props.shiftId, delivery => {
+    DatabaseService.deliveryList(this.props.shiftId, delivery => {
       this.setState({ deliveries: delivery })
     });
   }
 
-  openModal() {
-    this.setState({ modalVisible: true });
-  }
+  // openModal() {
+  //   this.setState({ modalVisible: true });
+  // }
 
-  handleClose() {
-    console.log(arguments);
-    this.setState({ modalVisible: false });
-  }
+  // handleClose() {
+  //   console.log(arguments);
+  //   this.setState({ modalVisible: false });
+  // }
 
   render() {
 
@@ -82,15 +61,22 @@ export default class DeliveryPage extends Component {
 
 
     // let deliveryList = this.state.deliveries.map((delivery) => (
-    // 		<DeliveryOverviewSingle
-    // 			delivery={ delivery }
-    // 			key={ delivery.id } />
-    // 	));
+    //    <DeliveryOverviewSingle
+    //      delivery={ delivery }
+    //      key={ delivery.id } />
+    //  ));
 
     return(
 
-      <div>
-
+      <div className="row">
+        <div className="col s12">
+          <ul className="tabs">
+            <li className="tab col s3"><a href="#test1">Test 1</a></li>
+            <li className="tab col s3"><a className="active" href="#test2">Test 2</a></li>
+          </ul>
+        </div>
+        <div id="test1" className="col s12">Test 1</div>
+        <div id="test2" className="col s12">Test 2</div>
       </div>
     );
   }
