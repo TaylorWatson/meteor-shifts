@@ -1,47 +1,9 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 
-import TextField from 'material-ui/lib/text-field';
-import Toggle from 'material-ui/lib/toggle';
-import Paper from 'material-ui/lib/paper';
-import Colors from 'material-ui/lib/styles/colors';
-import SelectField from 'material-ui/lib/select-field';
-import MenuItem from 'material-ui/lib/menus/menu-item';
-import IconButton from 'material-ui/lib/icon-button';
-import Tabs from 'material-ui/lib/tabs/tabs';
-import Tab from 'material-ui/lib/tabs/tab';
-import KeyboardArrowLeft from 'material-ui/lib/svg-icons/hardware/keyboard-arrow-left';
-import { FloatingHeader } from './floating-header.jsx';
-import AppBar from 'material-ui/lib/app-bar';
-import { Delivery } from '../models/deliveries';
-import RaisedButton from 'material-ui/lib/raised-button';
-
-import { DeliveryService } from '../services/delivery-service';
-import { NavigationService } from '../services/navigation-service';
-
-
-    // const Style = {
-    //   width: '100%',
-    //   padding: '10px',
-    //   backgroundColor: Colors.blueGrey50,
-    //   height: 'calc(100vh - 64px)',
-    //   display: 'inline-block'
-    // };
-
-    // const SaveButton = {
-    //   width: '100%',
-    //   height: '50px',
-    //   backgroundColor: Colors.blueGrey700,
-    // };
-
-    // const SubStyle = {
-    //   backgroundColor: Colors.grey100,
-    //   padding: '15px'
-    // };
-
-
-
-
+import ErrorHandler from '../../services/ErrorHandler';
+import DatabaseService from '../../services/DatabaseService';
+import Delivery from '../../models/Delivery';
 
 export default class DeliveryInput extends Component {
 

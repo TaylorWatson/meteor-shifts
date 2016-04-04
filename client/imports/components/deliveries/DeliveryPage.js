@@ -4,6 +4,7 @@ import _ from 'lodash';
 import ErrorHandler from '../../services/ErrorHandler';
 import DatabaseService from '../../services/DatabaseService';
 import Delivery from '../../models/Delivery';
+import DeliveryInput from './DeliveryInput';
 
 export default class DeliveryPage extends Component {
 
@@ -71,11 +72,13 @@ export default class DeliveryPage extends Component {
       <div className="row">
         <div className="col s12">
           <ul className="tabs">
-            <li className="tab col s3"><a href="#test1">Test 1</a></li>
-            <li className="tab col s3"><a className="active" href="#test2">Test 2</a></li>
+            <li className="tab col s3"><a className="active" href="#test1">Test 1</a></li>
+            <li className="tab col s3"><a  href="#test2">Test 2</a></li>
           </ul>
         </div>
-        <div id="test1" className="col s12">Test 1</div>
+        <div id="test1" className="col s12">
+        hi
+        </div>
         <div id="test2" className="col s12">Test 2</div>
       </div>
     );

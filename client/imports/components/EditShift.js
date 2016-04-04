@@ -8,6 +8,7 @@ import Shift from '../models/Shift';
 import TimePicker from './ui/TimePicker';
 import DatePicker from './ui/DatePicker';
 import InputField from './ui/InputField';
+import SelectOption from './ui/SelectOption';
 
 export default class EditShift extends Component {
 
@@ -99,6 +100,21 @@ export default class EditShift extends Component {
           onChange={ this.handleChange }
           value={ shift.title } />
 
+      <SelectOption
+        label='Payment Option'
+        options={['debit', 'credit', 'cash']}
+        />
+<br />
+        <div className="input-field col s12">
+    <select multiple>
+      <option value="" disabled selected>Choose your option</option>
+      <option value="1">Option 1</option>
+      <option value="2">Option 2</option>
+      <option value="3">Option 3</option>
+    </select>
+    <label>Materialize Multiple Select</label>
+  </div>
+<br />
         <InputField
           label="Location"
           name="location"
