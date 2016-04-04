@@ -7,6 +7,7 @@ import Shift from '../models/Shift';
 
 import TimePicker from './ui/TimePicker';
 import DatePicker from './ui/DatePicker';
+import InputField from './ui/InputField';
 
 export default class EditShift extends Component {
 
@@ -14,13 +15,24 @@ export default class EditShift extends Component {
 
     super(props);
 
-    this.state = {
-      shift: new Shift(props.shift || {})
+    if (this.props.shiftId) {
+      Shift.findOne(this.props.shiftId, (err, shift) => {
+        if (err) {
+          Materialize.toast('Error: ' + err, 3000);
+          FlowRouter.go('/');
+        } else {
+          this.setState({ shift });
+        }
+      })
+    } else {
+      this.state = {
+        shift: new Shift(props.shift || {})
+      }
     }
 
     this.saveClicked = this.saveClicked.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleDateTimeChange = this.handleDateTimeChange.bind(this);
+    this.handleDateTime = this.handleDateTime.bind(this);
   }
 
   handleChange(event) {
@@ -49,87 +61,68 @@ export default class EditShift extends Component {
     window.history.back();
   }
 
-  handleDateTimeChange(e) {
+  handleDateTime(e) {
+
     let { shift } = this.state;
-    if (e.target.value.date) {
-      let { startTime, endTime } = shift;
 
-      if (startTime) {
-        startTime.set(e.target.value);
-        startTime = moment(new Date(startTime));
-      } else {
-        startTime = moment(new Date());
-        startTime.set(e.target.value);
+    let { target: { value: v } } = e;
+
+    if (_.isObject(v)) {
+
+      shift.startTime = (moment(new Date()).set(v)).toDate();
+
+      let startlabel = $(this.refs.startlabel);
+      if (!startlabel.hasClass('active')) {
+        startlabel.addClass('active'); // 8-) got style!!
       }
 
-      shift.startTime = startTime.toDate();
-
-      if (endTime) {
-        endTime = moment(new Date(endTime));
-        endTime.set(e.target.value);
-        shift.endTime = endTime.toDate();
+    } else if (_.isString(v)) {
+      shift.setTime(v);
+      let datelabel = $(this.refs.datelabel);
+      if (!datelabel.hasClass('active')) {
+        datelabel.addClass('active'); // 8-) got style!!
       }
-    } else {
-      let obj = shift[e.target.name];
-      let newDate = new Date(obj ? obj : new Date());
-      let time = moment(newDate);
-      let adjustedTime = time.set(e.target.value);
-      let value = adjustedTime.toDate();
-      shift[e.target.name] = value;
     }
-
-    let { eTime, sTime } = this.fixBeforeAfter(shift);
-    if (shift.startTime) {
-      shift.startTime = sTime;
-    }
-    if (shift.endTime) {
-      shift.endTime = eTime;
-    }
-
-    console.log(shift);
 
     this.setState({ shift });
   }
 
-  fixBeforeAfter(shift) {
-    let { startTime, endTime } = shift;
-    startTime = moment(new Date(startTime));
-    endTime = moment(new Date(endTime));
-
-    if (endTime.isBefore(startTime)) {
-      endTime.add({ days: 1 });
-    }
-
-    return {
-      sTime: startTime.toDate(),
-      eTime: endTime.toDate()
-    }
-  }
-
   render() {
+    if (!this.state) return <p className="flow-text">Loading ...</p>;
     let shift = this.state.shift;
     return (
       <div className="container" style={{ paddingTop: '15px' }}>
-        <div className="input-field">
-          <label htmlFor="title">Title</label>
-          <input id="title" name="title" onChange={ this.handleChange } type="text"/>
-        </div>
-        <div className="input-field">
-          <label htmlFor="location">Location</label>
-          <input id="location" name="location" onChange={ this.handleChange } type="text"/>
-        </div>
-        <div className="input-field">
-          <label htmlFor="startDate">Start Date</label>
-          <DatePicker name="startTime" id="startDate" onChange={ this.handleDateTimeChange } value={ shift.startTime } />
-        </div>
-        <div className="input-field">
-          <label htmlFor="startTime">Start Time</label>
-          <TimePicker name="startTime" value={ shift.startTime } onChange={ this.handleDateTimeChange } />
-        </div>
-        <div className="input-field">
-          <label htmlFor="endTime">End Time</label>
-          <TimePicker name="endTime" value={ shift.endTime } onChange={ this.handleDateTimeChange } />
-        </div>
+
+        <InputField
+          label="Title"
+          name="title"
+          onChange={ this.handleChange }
+          value={ shift.title } />
+
+        <InputField
+          label="Location"
+          name="location"
+          onChange={ this.handleChange }
+          value={ shift.location } />
+
+        <DatePicker
+          name="startTime"
+          id="startTime"
+          onChange={ this.handleDateTime }
+          value={ shift.startTime }
+          label={ 'Start Date' } />
+
+        <TimePicker
+          label="Start Time"
+          name="startTime"
+          value={ shift.startTime }
+          onChange={ this.handleDateTime } />
+
+        <TimePicker
+          label="End Time"
+          name="endTime"
+          value={ shift.endTime }
+          onChange={ this.handleChange } />
 
         <div style={{ width: '100%' }} className="waves-effect waves-light btn blue-grey" onClick={ this.saveClicked }>Save</div>
       </div>

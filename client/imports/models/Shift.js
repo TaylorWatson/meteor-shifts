@@ -32,15 +32,8 @@ export default class Shift {
       }
     }
 
-    if (moment(this.endTime).isBefore(moment(this.startTime))) {
-      this._errors.push({ startTime: "Start time is later than end time." });
-      if (callback) {
-        return callback("Start time is later than end time.");
-      }
-    }
-
     callback();
-    
+
     return !this._errors.length;
   }
 
@@ -48,33 +41,32 @@ export default class Shift {
     if (!(typeof callback == "function")) {
       throw new Error("Call back is required in save.");
     }
-    let rawShift = this.raw();
+
     this.validate(err => {
       if (err) callback(err);
       else {
         if (this._isNew) {
-          Shift.insert(this.raw(), callback);
+          Shift.insert(this, callback);
         } else {
-          Shift.update(this.raw(), callback);
+          Shift.update(this, callback);
         }
       }
     });
   }
 
-  raw() {
-    let rawShift = {};
-    let ignored = ['save', 'validate', '_isNew', '_errors'];
-
-    _.map(_.keys(this), (key) => {
-
-      if (!_.intersection(ignored, [key]).length) {
-        rawShift[key] = this[key];
-      }
-    });
-
-
-
-    return rawShift;
+  setTime(v) {
+    if (!this.startTime) {
+      this.startTime = new Date();
+    }
+    let [ hour, minuteStr ] = v.split(':');
+    hour = new Number(hour).valueOf();
+    let minute = new Number(minuteStr.substr(0, 2)).valueOf();
+    if (minuteStr.substr(2, 2) == "AM" && hour == 12) {
+      hour = 0;
+    }
+    this.startTime = (moment(new Date(this.startTime)).set({
+      hour, minute, second: 0, millisecond: 0
+    })).toDate();
   }
 
   static find(callback) {
@@ -105,6 +97,7 @@ export default class Shift {
         callback(null, new Shift(results.rows[0]));
       }, ErrorHandler);
     }, ErrorHandler);
+
   }
 
   static insert(shift, callback) {
@@ -125,7 +118,7 @@ export default class Shift {
       ];
 
       tx.executeSql(sql, options, (tx, result) => {
-        callback && callback(result);
+        callback && callback(null, result);
       }, ErrorHandler);
     }, ErrorHandler);
   }

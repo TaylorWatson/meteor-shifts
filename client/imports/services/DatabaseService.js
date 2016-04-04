@@ -13,7 +13,7 @@ class DatabaseService {
         "title VARCHAR(20) NOT NULL," +
         "location VARCHAR(20)," +
         "startTime DATETIME," +
-        "endTime DATETIME," +
+        "endTime VARCHAR(8)," +
         "clockInTime DATETIME," +
         "clockOutTime DATETIME," +
         "job VARCHAR(20));", [], null, ErrorHandler);

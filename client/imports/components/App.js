@@ -52,6 +52,7 @@ export default class App extends Component {
             </ul>
             <ul className="side-nav" id="mobile-demo">
               <li><a href="/">Home</a></li>
+              <li><a href="/deliveries">Delivery</a></li>
               <li><a href="#">Reporting</a></li>
               <li><a href="#">Set metrics</a></li>
               <li><a href="#">Help and feedback</a></li>

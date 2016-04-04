@@ -7,6 +7,8 @@ export default class TimePicker extends Component {
     super();
 
     this.timeDone = this.timeDone.bind(this);
+    this.setValue = this.setValue.bind(this);
+    this.clear = this.clear.bind(this);
   }
 
   componentDidMount() {
@@ -17,44 +19,39 @@ export default class TimePicker extends Component {
     });
   }
 
+  setValue() {}
+
+  clear() {}
+
   timeDone() {
-    let timeString = $(this.refs.timeInput).val();
-
-    let [ hours, minutes ] = timeString.split(":");
-    hours = new Number(hours).valueOf();
-    let a = minutes.substr(2, 2);
-    minutes = new Number(minutes.substr(0, 2)).valueOf();
-
-    if (a == "PM" && hours !== 12) {
-      hours += 12;
-    }
+    let value = $(this.refs.timeInput).val(),
+        name = this.props.name;
 
     this.props.onChange({ 
       target: { 
-        name: this.props.name, 
-        value: {
-          hour: hours,
-          minute: new Number(minutes).valueOf(),
-          second: 0,
-          millisecond: 0
-        }
+        name, 
+        value
       }
     });
   }
 
   render() {
-    let value = '';
-    if (this.props.value) {
-      value = moment(new Date(this.props.value)).format('hh:mmA');
+    let value = this.props.value;
+    if (value && (_.isObject(value) || (_.isString(value) && value.length > 10))) {
+      value = moment(new Date(value)).format('hh:mmA');
+    } else if (value == "undefined") {
+      value = '';
     }
     return (
-      <input id={ this.props.name } name={ this.props.name } value={ value } ref='timeInput' className="timepicker" type="text" />
+      <div className="input-field">
+        <label htmlFor="startTime" ref="label" className={ value ? 'active' : '' }>{ this.props.label }</label>
+        <input id={ this.props.name } name={ this.props.name } value={ value } readOnly ref='timeInput' className="timepicker" type="text" />
+      </div>
     )
   }
 }
 
 TimePicker.propTypes = {
   onChange: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired,
-  value: PropTypes.object
+  name: PropTypes.string.isRequired
 }

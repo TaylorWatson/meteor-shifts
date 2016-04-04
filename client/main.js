@@ -1,8 +1,8 @@
 import App from './imports/components/AppContainer';
 import Home from './imports/components/HomeContainer';
-import EditShift from './imports/components/EditShiftContainer';
+import EditShift from './imports/components/EditShift';
 import DeliverySingle from './imports/components/deliveries/DeliverySingle';
-// import DeliveryPage from './imports/components/deliveries/DeliveryPage';
+import DeliveryPage from './imports/components/deliveries/DeliveryPage';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount } from 'react-mounter';
@@ -18,7 +18,7 @@ Meteor.startup(() => {
 
 FlowRouter.route('/', {
   action() {
-    Title.set('Upcoming Shifts');
+    Title.set("Upcoming Shifts");
     mount(App, { content: <Home /> });
   }
 });
@@ -39,7 +39,7 @@ FlowRouter.route('/shifts/:shiftId', {
 
 FlowRouter.route('/deliveries', {
   action(params) {
-    Title.set('Edit Shift');
-    mount(App, { content: <DeliverySingle  /> });
+    Title.set('Add Delivery');
+    mount(App, { content: <DeliveryPage  /> });
   }
 });
