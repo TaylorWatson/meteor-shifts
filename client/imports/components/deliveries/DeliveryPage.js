@@ -5,16 +5,16 @@ import ErrorHandler from '../../services/ErrorHandler';
 import DatabaseService from '../../services/DatabaseService';
 import Delivery from '../../models/Delivery';
 import DeliveryInput from './DeliveryInput';
+import SelectOption from '../ui/SelectOption';
+import DeliverySingle from './DeliverySingle';
 
 export default class DeliveryPage extends Component {
 
-  constructor() {
-    super();
-
+  constructor(props) {
+    super(props);
     this.state = {
-      value: 0,
-      modalVisible: false,
-      deliveries: []
+      deliveries: [],
+      selectedTab: 1
     }
   }
 
@@ -22,8 +22,10 @@ export default class DeliveryPage extends Component {
     window.history.back();
   }
 
-  componentDidMount(){
-    //this.deliveryList();
+  componentDidMount(prevProps){
+    // this.deliveryList();
+    $(this.refs.tabs).tabs();
+    $(this.refs.tabs).tabs('select_tab', 'add');
   }
 
   handleTabChange(value) {
@@ -31,55 +33,39 @@ export default class DeliveryPage extends Component {
   }
 
   deliveryList() {
-    DatabaseService.deliveryList(this.props.shiftId, delivery => {
+    Delivery.deliveryList(this.props.shiftId, delivery => {
       this.setState({ deliveries: delivery })
     });
+    console.log(this.state.deliveries);
   }
 
-  // openModal() {
-  //   this.setState({ modalVisible: true });
-  // }
-
-  // handleClose() {
-  //   console.log(arguments);
-  //   this.setState({ modalVisible: false });
-  // }
+  logChange(val) {
+    console.log("Selected: " + val);
+  }
 
   render() {
 
-    // let modalButtons = [
-    //   <FlatButton
-    //     label="Cancel"
-    //     secondary={true}
-    //     onTouchTap={ this.cancelModal } />,
-    //   <FlatButton
-    //     label="Take a Break"
-    //     onTouchTap={ this.takeABreak } />,
-    //   <FlatButton
-    //     label="Clock Out"
-    //     onTouchTap={ this.clockOut } />
-    // ];
 
-
-    // let deliveryList = this.state.deliveries.map((delivery) => (
-    //    <DeliveryOverviewSingle
-    //      delivery={ delivery }
-    //      key={ delivery.id } />
-    //  ));
+    let deliveryList = this.state.deliveries.map((delivery) => (
+      <DeliverySingle
+        delivery={ delivery }
+        key={ delivery.id } />
+    ));
 
     return(
-
       <div className="row">
         <div className="col s12">
-          <ul className="tabs">
-            <li className="tab col s3"><a href="#test1">Test 1</a></li>
-            <li className="tab col s3"><a className="active" href="#test2">Test 2</a></li>
+          <ul className="tabs" ref='tabs'>
+            <li className="tab col s6"><a href="#add">Add Delivery</a></li>
+            <li className="tab col s6"><a href="#view">View Deliveries</a></li>
           </ul>
         </div>
-        <div id="test1" className="col s12">
-          <DeliveryInput />
+        <div id="add" className="col s12">
+          <DeliveryInput shiftId={ this.props.shiftId }/>
         </div>
-        <div id="test2" className="col s12">Test 2</div>
+        <div id="view" className="col s12">
+          { deliveryList }
+        </div>
       </div>
     );
   }

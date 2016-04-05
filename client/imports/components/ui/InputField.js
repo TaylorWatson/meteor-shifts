@@ -5,12 +5,28 @@ export default class Input extends Component {
     super()
   }
 
+  componentDidMount() {
+    
+  }
+
+  componentWillUnmount() {
+    $(this.refs.input).off();
+  }
+
   render() {
-    let { value, onChange, label, name, id } = this.props;
+    let { value, onChange, label, name, id, icon } = this.props;
+    if (icon) {
+      icon = <i className="prefix">{ icon }</i>;
+    }
+    let labelClass = "";
+    if (value || value == 0) {
+      labelClass = "active";
+    }
     return (
       <div className="input-field">
-        <label htmlFor={ id || name } className={ value ? 'active' : '' }>{ label }</label>
-        <input id={ id || name } name={ name } value={ value } onChange={ onChange } type="text"/>
+        { icon }
+        <label htmlFor={ id || name } className={ labelClass }>{ label }</label>
+        <input id={ id || name } ref="input" name={ name } value={ value } onChange={ onChange } type="text"/>
       </div>
     );
   }
@@ -20,6 +36,6 @@ Input.propTypes = {
   onChange: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  value: PropTypes.string,
-  id: PropTypes.string
+  id: PropTypes.string,
+  icon: PropTypes.object
 }

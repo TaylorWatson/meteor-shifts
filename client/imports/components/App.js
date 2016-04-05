@@ -17,7 +17,9 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    $(this.refs.newTest).sideNav();
+    $(this.refs.newTest).sideNav({
+      closeOnClick: true
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -52,9 +54,8 @@ export default class App extends Component {
             </ul>
             <ul className="side-nav" id="mobile-demo">
               <li><a href="/">Home</a></li>
-              <li><a href="/deliveries">Delivery</a></li>
               <li><a href="#">Reporting</a></li>
-              <li><a href="#">Set metrics</a></li>
+              <li><a href="/settings">Set metrics</a></li>
               <li><a href="#">Help and feedback</a></li>
               <li><a href="#">Rate the app</a></li>
             </ul>

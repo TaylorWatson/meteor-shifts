@@ -24,17 +24,20 @@ export default class ShiftCard extends Component {
 
   start() {
 
-    ShiftService.clockInTime(id, () => {
-      NavigationService.pushState(<DeliveriesPage shiftId={ this.props.shift.id } />);
+    Shift.clockInTime(this.props.shift.id, (err) => {
+      if (err) {
+        console.error(err);
+        Materialize.toast(err, 3000);
+      } else {
+        console.log('shiftID: ' + this.props.shift.id);
+        FlowRouter.go(`/deliveries/${this.props.shift.id}`);
+      }
     });
-
   }
 
   resume() {
-
-    console.log(this.props.shift);
-
-    NavigationService.pushState(<DeliveriesPage shiftId={ this.props.shift.id } />);
+    console.log('shiftID: ' + this.props.shift.id);
+    FlowRouter.go(`/deliveries/${this.props.shift.id}`);
 
   }
 
@@ -49,10 +52,10 @@ export default class ShiftCard extends Component {
     let day = (`${moment(new Date(startTime)).format('D, MMMM, YYYY h:mm a')}`);
     if (endTime !== "undefined") day += ' to ' + endTime;
 
-    let buttons = [<a className="waves-effect waves-light btn" key={ 1 } onClick={ this.edit } >Edit Shift</a>];
+    let buttons = [<a className="waves-effect waves-light btn" key={ 1 } style={{ margin: '0 10px 10px 0' }} onClick={ this.edit } >Edit Shift</a>];
 
     if (!currentlyClockedIn && (moment(new Date(startTime)))  .isSame(moment(new Date()), 'day'))
-      buttons.push(<a className="waves-effect waves-light btn" key={ 2 } onClick={ this.start } >Start Shift</a>);
+      buttons.push(<a className="waves-effect waves-light btn" key={ 2 } style={{ margin: '0 10px 10px 0' }} onClick={ this.start } >Start Shift</a>);
     if (clockInTime !== "undefined" && clockOutTime == "undefined")
       buttons.push(<a className="waves-effect waves-light btn" key={ 3 } style={{ margin: '0 0 10px 0' }} onClick={ this.resume }>Resume Shift</a>);
 

@@ -5,18 +5,28 @@ import ErrorHandler from '../../services/ErrorHandler';
 import DatabaseService from '../../services/DatabaseService';
 import Delivery from '../../models/Delivery';
 
+import InputField from '../ui/InputField';
+import SelectOption from '../ui/SelectOption';
+
 export default class DeliveryInput extends Component {
 
 navBack() {
     window.history.back();
   }
 
-  constructor() {
-    super();
-    this.state = {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.paymentTypeHandler = this.paymentTypeHandler.bind(this);
+    this.handleToggle = this.handleToggle.bind(this);
+    this.submitDelivery = this.submitDelivery.bind(this);
+    if (this.props.shiftId) {
+      this.state = {
       delivery: new Delivery({ shiftId: this.props.shiftId })
+      }
     }
   }
+
 
   handleChange(e) {
     let { delivery } = this.state;
@@ -50,7 +60,7 @@ navBack() {
 
     let { delivery } = this.state;
 
-    DeliveryService.addDelivery(delivery, (err, result) => {
+    Delivery.addDelivery(delivery, (err, result) => {
 
       if (err) {
         console.log('ERROR!');
@@ -59,42 +69,53 @@ navBack() {
       }
 
     });
-
     console.log('SUBMITTING DELIVERY: ', delivery);
-
   }
 
   render() {
 
-
-
     let { delivery } = this.state;
+    let options = ['Cash', 'Debit', 'Credit slip'];
 
     return (
-      <div>
-          <Paper style={ Style } zDepth={2}>
+      <div className='card grey lighten-4 row' style={{ margin: '10px 10px 10px 10px' }}>
+        <div className='card-content'>
+          <InputField
+            label="Delivery Number"
+            name="deliveryNumber"
+            onChange={ this.handleChange }
+            value={ delivery.deliveryNumber } />
 
-          <FloatingHeader backgroundColor={ Colors.blueGrey900 } color={ Colors.grey50 }>Delivery Inputs</FloatingHeader>
+          <InputField
+            label="Tip Amount"
+            name="tipAmount"
+            onChange={ this.handleChange }
+            value={ delivery.tipAmount } />
 
-          <Paper style={ SubStyle } zDepth={1}><br />
+         <InputField
+            label="Delivery Amount"
+            name="deliveryAmount"
+            onChange={ this.handleChange }
+            value={ delivery.deliveryAmount } />
 
-            <TextField name="deliveryNumber" hintText="ex. 103" value={ delivery.deliveryNumber } fullWidth onChange={ this.handleChange } /><br />
-            <TextField name="tipAmount" hintText="3.49" value={ delivery.tipAmount } fullWidth onChange={ this.handleChange } /><br /><br />
+          <div className="switch row">
+            <div className='col s9' style={{ marginTop: '5px' }}>
+              <label className=''>Is Out</label>
+            </div>
+            <div className='col s3'>
+              <label>
+                <input type="checkbox" onChange={ this.handleToggle } checked={ delivery.isOut } style={{ marginRight: '10px' }} />
+                <span className="lever"></span>
+              </label>
+            </div>
+          </div>
 
-            <Toggle
-              label="Is Out"
-              onToggle={ this.handleToggle }
-              toggled={ delivery.isOut } />
-
-            <SelectField fullWidth value={ delivery.paymentType } onChange={ this.paymentTypeHandler }>
-              <MenuItem value={1} primaryText="Cash"/>
-              <MenuItem value={2} primaryText="Debit"/>
-              <MenuItem value={3} primaryText="Credit Card Slip"/>
-            </SelectField>
-
-          </Paper>
-          <RaisedButton label="Add Delivery" onMouseUp={ this.submitDelivery } style={ SaveButton } />
-         </Paper>
+          <SelectOption
+            label='Payment Option'
+            options={ options }
+            value={ delivery.paymentType }
+            onChange={ this.paymentTypeHandler } />
+        </div>
       </div>
     );
   }

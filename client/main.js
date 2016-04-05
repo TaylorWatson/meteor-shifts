@@ -3,13 +3,17 @@ import Home from './imports/components/HomeContainer';
 import EditShift from './imports/components/EditShift';
 import DeliverySingle from './imports/components/deliveries/DeliverySingle';
 import DeliveryPage from './imports/components/deliveries/DeliveryPage';
+import Settings from './imports/components/Settings';
+import { DatabaseService } from './imports/services/DatabaseService';
+import Title from './imports/reactive-vars/Title';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount } from 'react-mounter';
+
 import { Meteor } from 'meteor/meteor';
-import Title from './imports/reactive-vars/Title';
+
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import { DatabaseService } from './imports/services/DatabaseService';
 injectTapEventPlugin();
 
 Meteor.startup(() => {
@@ -37,9 +41,19 @@ FlowRouter.route('/shifts/:shiftId', {
   }
 });
 
-FlowRouter.route('/deliveries', {
+FlowRouter.route('/deliveries/:shiftId', {
   action(params) {
-    Title.set('Add Delivery');
-    mount(App, { content: <DeliveryPage  /> });
+    Title.set('Deliveries');
+    mount(App, { content: <DeliveryPage shiftId={ params.shiftId } /> });
   }
 });
+
+FlowRouter.route('/settings', {
+  action(params) {
+    Title.set('App Settings');
+    mount(App, { content: <Settings /> });
+  }
+})
+
+
+//whyyyyyy

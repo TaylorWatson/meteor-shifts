@@ -72,7 +72,7 @@ export default class Shift {
   static find(callback) {
     let shifts = [];
     DatabaseService.db.transaction(tx => {
-      let sql = "SELECT * FROM shifts;";
+      let sql = "SELECT * FROM shifts ORDER BY startTime;";
 
       tx.executeSql(sql, [], (tx, results) => {
 

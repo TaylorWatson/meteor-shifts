@@ -26,6 +26,13 @@ class DatabaseService {
         "paymentType INTEGER," +
         "deliveryAmount DOUBLE);", [], null, ErrorHandler);
 
+      tx.executeSql("CREATE TABLE IF NOT EXISTS settings (" +
+        "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+        "hourlyRate DECIMAL(4,2)," +
+        "outBonus DECIMAL(4,2)," + 
+        "debitFee DECIMAL(4,2)," +
+        "unitBonus DECIMAL(4,2));", [], null, ErrorHandler);
+
     }, ErrorHandler);
   }
 
@@ -34,23 +41,24 @@ class DatabaseService {
   }
 
   refresh() {
-    this.db.transaction(tx => {
-      tx.executeSql(
-        "DROP TABLE IF EXISTS shifts;",
-        [],
-        (tx) => {
-          tx.executeSql(
-            "DROP TABLE IF EXISTS deliveries;",
-            [],
-            () => {
-              this.init();
-            },
-            ErrorHandler
-          );
-        },
-        ErrorHandler
-      );
-    }, ErrorHandler);
+    let statements = [
+      "DROP TABLE IF EXISTS shifts;",
+      "DROP TABLE IF EXISTS deliveries;",
+      "DROP TABLE IF EXISTS settings;"
+    ];
+
+    let i = 0;
+
+    function recursiveTransaction(tx) {
+      let statement = statemnets.shift();
+      if (statement) {
+        tx.executeSql(statement, [], recursiveTransaction, ErrorHandler);
+      } else {
+        this.init();
+      }
+    }
+
+    this.db.transaction(recursiveTransaction, ErrorHandler);
   }
 
 }
