@@ -63,6 +63,8 @@ export default class Shift {
     let minute = new Number(minuteStr.substr(0, 2)).valueOf();
     if (minuteStr.substr(2, 2) == "AM" && hour == 12) {
       hour = 0;
+    } else if (minuteStr.substr(2, 2) == "PM" && hour != 12) {
+      hour += 12;
     }
     this.startTime = (moment(new Date(this.startTime)).set({
       hour, minute, second: 0, millisecond: 0

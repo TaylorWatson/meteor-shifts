@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 
+
+import { CASH, DEBIT, CREDIT_CARD_SLIP } from '../../enum/paymentOptions';
 import ErrorHandler from '../../services/ErrorHandler';
 import DatabaseService from '../../services/DatabaseService';
 import Delivery from '../../models/Delivery';
@@ -10,14 +12,13 @@ import SelectOption from '../ui/SelectOption';
 
 export default class DeliveryInput extends Component {
 
-navBack() {
+  navBack() {
     window.history.back();
   }
 
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
-    this.paymentTypeHandler = this.paymentTypeHandler.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
     this.submitDelivery = this.submitDelivery.bind(this);
     if (this.props.shiftId) {
@@ -27,7 +28,6 @@ navBack() {
     }
   }
 
-
   handleChange(e) {
     let { delivery } = this.state;
 
@@ -36,13 +36,6 @@ navBack() {
     console.log(delivery);
 
     this.setState({ delivery });
-  }
-
-  paymentTypeHandler(event, index, value) {
-      let { delivery } = this.state;
-      delivery.paymentType = value;
-      console.log(delivery);
-      this.setState({ delivery });
   }
 
 
@@ -75,11 +68,23 @@ navBack() {
   render() {
 
     let { delivery } = this.state;
-    let options = ['Cash', 'Debit', 'Credit slip'];
+    {/*let options = ['Cash', 'Debit', 'Credit slip'];*/}
+
+    let options = [{
+      value: CASH,
+      text: 'Cash'
+    }, {
+      value: DEBIT,
+      text: 'Debit'
+    }, {
+      value: CREDIT_CARD_SLIP,
+      text: 'Credit Slip'
+    }];
 
     return (
       <div className='card grey lighten-4 row' style={{ margin: '10px 10px 10px 10px' }}>
         <div className='card-content'>
+
           <InputField
             label="Delivery Number"
             name="deliveryNumber"
@@ -111,11 +116,14 @@ navBack() {
           </div>
 
           <SelectOption
-            label='Payment Option'
             options={ options }
+            name="paymentOption"
             value={ delivery.paymentType }
-            onChange={ this.paymentTypeHandler } />
-        </div>
+            onChange={ this.handleChange } />
+         </div>
+         <div className='container'>
+          <button className="waves-effect waves-light btn col s11" style={{ margin: '10px' }} onClick={ this.submitDelivery }>Add Delivery</button>
+         </div>
       </div>
     );
   }
