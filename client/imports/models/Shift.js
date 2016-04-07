@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 import ErrorHandler from '../services/ErrorHandler';
+import Setting from './Setting';
 import { DatabaseService } from '../services/DatabaseService';
 
 export default class Shift {
@@ -69,6 +70,44 @@ export default class Shift {
     this.startTime = (moment(new Date(this.startTime)).set({
       hour, minute, second: 0, millisecond: 0
     })).toDate();
+  }
+
+  getHoursWorked() {
+    if (!this.clockInTime || !this.clockOutTime) {
+      throw new Error("Shift is not fully worked! Can not get hours worked.");
+    }
+
+    let end = moment(new Date(this.clockOutTime));
+    let start = moment(new Date(this.clockInTime));
+    let duration = moment.duration(end.diff(start));
+    let hours = duration.asHours();
+    let minutes = duration.asMinutes();
+    let minutesAsHours = (minutes % 60) / 60;
+    hours += minutesAsHours;
+
+    return hours;
+  }
+
+  getTotalsPromise() {
+    return new Promise((resolve, reject) => {
+      Delivery.deliveryList(this.id, (err, deliveries) => {
+        if (err) {
+          reject(err);
+        } else {
+          let hoursWorked = this.getHoursWorked();
+          let incomeEarned = hoursWorked * (this.hourlyRate || 1);
+          let numberOfDeliveries = deliveries.length;
+          let totalTips = _.sumBy(deliveries, 'tipAmount');
+
+          resolve({
+            hoursWorked,
+            incomeEarned,
+            numberOfDeliveries,
+            totalTips
+          });
+        }
+      });
+    });
   }
 
   static find(callback) {
@@ -163,25 +202,37 @@ export default class Shift {
   }
 
   static clockInTime(id, callback) {
+  
+    Setting.find((err, setting) => {
 
-    DatabaseService.db.transaction(tx => {
-      let sql = "SELECT * FROM shifts WHERE clockInTime IS NOT NULL AND clockOutTime IS NULL;";
-      tx.executeSql(sql, [], (tx, results) => {
-        if (results.rows.length) {
-          callback("YOU ARE ALREADY CLOCKED IN FOOL!!!!!!!!!!!!!");
-          return;
-        }
-        let sql = "UPDATE shifts SET " +
-        "clockInTime=? " +
-        "WHERE id=?;";
-        let options = [
-          new Date(),
-          id];
+      DatabaseService.db.transaction(tx => {
+        let sql = "SELECT * FROM shifts WHERE clockInTime IS NOT NULL AND clockOutTime IS NULL;";
+        tx.executeSql(sql, [], (tx, results) => {
+          if (results.rows.length) {
+            callback("YOU ARE ALREADY CLOCKED IN FOOL!!!!!!!!!!!!!");
+            return;
+          }
+          let sql = "UPDATE shifts SET " +
+          "clockInTime=?," +
+          "hourlyRate=?," +
+          "outBonus=?," +
+          "debitFee=?," +
+          "unitBonus=? " +
+          "WHERE id=?;";
+          let options = [
+            new Date(),
+            setting.hourlyRate,
+            setting.outBonus,
+            setting.debitFee,
+            setting.unitBonus,
+            id];
 
-        tx.executeSql(sql, options, (tx, results) => {
-          callback(null, results);
+          tx.executeSql(sql, options, (tx, results) => {
+            callback(null, results);
+          }, ErrorHandler);
         }, ErrorHandler);
-      }, ErrorHandler);
+      });
+
     });
 
   }
@@ -189,12 +240,13 @@ export default class Shift {
   static clockOutTime(id, callback) {
 
     DatabaseService.db.transaction(tx => {
-      let sql = "SELECT * FROM shifts WHERE clockInTime IS NULL AND clockOutTime IS NULL;";
+      let sql = "SELECT * FROM shifts WHERE clockInTime IS NOT NULL AND clockOutTime IS NULL;";
       tx.executeSql(sql, [], (tx, result) => {
-        if (results.rows.length) {
-          callback("YOU ARE ALREADY CLOCKED OUT FOOL!!!!!!!!!!!!!");
-          return;
-        }
+        // console.log(result);
+        // if (result.rows.length !== 1) {
+        //   callback("You need to clock in to clock out.");
+        //   return;
+        // }
 
         let sql = "UPDATE shifts SET " +
         "clockOutTime=? " +

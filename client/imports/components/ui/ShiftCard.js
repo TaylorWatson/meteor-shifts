@@ -47,15 +47,17 @@ export default class ShiftCard extends Component {
 
     let { startTime, clockOutTime, clockInTime, endTime, title, location } = shift;
 
-    startTime = moment(startTime);
+    startTime = moment(new Date(startTime));
 
     let day = (`${moment(new Date(startTime)).format('D, MMMM, YYYY h:mm a')}`);
     if (endTime !== "undefined") day += ' to ' + endTime;
 
     let buttons = [<a className="waves-effect waves-light btn" key={ 1 } style={{ margin: '0 10px 10px 0' }} onClick={ this.edit } >Edit Shift</a>];
 
-    if (!currentlyClockedIn && (moment(new Date(startTime)))  .isSame(moment(new Date()), 'day'))
+    if (!currentlyClockedIn && (clockInTime == "undefined" && clockOutTime == "undefined") && (moment(new Date(startTime))).isSame(moment(new Date()), 'day'))
       buttons.push(<a className="waves-effect waves-light btn" key={ 2 } style={{ margin: '0 10px 10px 0' }} onClick={ this.start } >Start Shift</a>);
+    if (clockOutTime !== "undefined" && clockInTime !== "undefined")
+      buttons.push(<a className="waves-effect waves-light btn" key={ 2 } style={{ margin: '0 10px 10px 0' }} onClick={ this.review } >Review Shift</a>);
     if (clockInTime !== "undefined" && clockOutTime == "undefined")
       buttons.push(<a className="waves-effect waves-light btn" key={ 3 } style={{ margin: '0 0 10px 0' }} onClick={ this.resume }>Resume Shift</a>);
 

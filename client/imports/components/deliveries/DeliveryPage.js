@@ -23,6 +23,7 @@ export default class DeliveryPage extends Component {
     this.handleSave = this.handleSave.bind(this);
     this.refreshDeliveries = this.refreshDeliveries.bind(this);
     this.selectDelivery = this.selectDelivery.bind(this);
+    this.clockOut = this.clockOut.bind(this);
   }
 
   navBack() {
@@ -72,6 +73,18 @@ export default class DeliveryPage extends Component {
     }
   }
 
+  clockOut() {
+    Shift.clockOutTime(this.props.shiftId, (err, result) => {
+      if (err) console.error(err);
+      else {
+        console.log('Clocked out!');
+        console.log(result);
+
+        FlowRouter.go('/');
+      }
+    });
+  }
+
   render() {
 
     let deliveryList = this.state.deliveries.map((delivery) => (
@@ -90,7 +103,8 @@ export default class DeliveryPage extends Component {
           </ul>
         </div>
         <div id="add" className="col s12">
-          <DeliveryInput delivery={ this.state.delivery } onChange={ this.handleChange } onSave={ this.handleSave }/>
+          <DeliveryInput delivery={ this.state.delivery } onChange={ this.handleChange } onSave={ this.handleSave }/><br />
+          <div className="waves-effect waves-light btn" style={{ width: '100%' }} onClick={ this.clockOut }>Clock Out</div>
         </div>
         <div id="view" className="col s12">
 

@@ -52,6 +52,10 @@ export default class Delivery {
 		}
 	}
 
+  remove(callback) {
+    Delivery.delete(this.id, callback);
+  }
+
   static checkDeliveryNumber(delivery, callback) {
     DatabaseService.db.transaction(tx => {
       let sql = 'SELECT * FROM deliveries WHERE shiftId=? AND deliveryNumber=?';
@@ -65,8 +69,8 @@ export default class Delivery {
         options.push(delivery.id);
       }
 
-      tx.execute(sql, options, (tx, result) => {
-        if (results.rows.length) {
+      tx.executeSql(sql, options, (tx, result) => {
+        if (result.rows.length) {
           callback("Delivery already exists.");
         } else {
           callback();
@@ -152,13 +156,14 @@ export default class Delivery {
     });
   }
 
-  static delete(number, callback) {
+  static delete(id, callback) {
     DatabaseService.db.transaction(tx => {
       let sql = 'DELETE FROM deliveries WHERE id=?;';
 
       tx.executeSql(sql, [id], (tx, result) => {
 
         callback(null,result);
+
       }, ErrorHandler);
     }, ErrorHandler);
   }

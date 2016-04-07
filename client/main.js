@@ -1,5 +1,6 @@
 import App from './imports/components/AppContainer';
 import Home from './imports/components/HomeContainer';
+import Reports from './imports/components/Reports';
 import EditShift from './imports/components/EditShift';
 import DeliverySingle from './imports/components/deliveries/DeliverySingle';
 import DeliveryPage from './imports/components/deliveries/DeliveryPage';
@@ -52,6 +53,13 @@ FlowRouter.route('/settings', {
   action(params) {
     Title.set('App Settings');
     mount(App, { content: <Settings /> });
+  }
+});
+
+FlowRouter.route('/reports', {
+  action(params) {
+    Title.set('Generate Reports');
+    mount(App, { content: <Reports /> });
   }
 })
 

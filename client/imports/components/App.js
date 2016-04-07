@@ -23,9 +23,6 @@ export default class App extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('wcrp');
-    console.log('next: ', nextProps, ' current: ', this.props);
-
     if (nextProps.open !== this.props.open) {
       this.refs.sideNav.toggle();
     }
@@ -47,14 +44,14 @@ export default class App extends Component {
             <a href="#" data-activates="mobile-demo" ref="newTest" style={{ marginLeft: '19px' }} className="button-collapse waves-effect default"><MenuIcon color={ "white" } style={ iconStyle } /></a>
             <a href="/shifts" className="right waves-effect default" style={{ marginRight: '15px' }} >Add Shift</a>
             <ul className="right hide-on-med-and-down">
-              <li><a href="#">Reporting</a></li>
+              <li><a href="/reports">Reporting</a></li>
               <li><a href="#">Set metrics</a></li>
               <li><a href="#">Help and feedback</a></li>
               <li><a href="#">Rate the app</a></li>
             </ul>
             <ul className="side-nav" id="mobile-demo">
               <li><a href="/">Home</a></li>
-              <li><a href="#">Reporting</a></li>
+              <li><a href="/reports">Reporting</a></li>
               <li><a href="/settings">Set metrics</a></li>
               <li><a href="#">Help and feedback</a></li>
               <li><a href="#">Rate the app</a></li>

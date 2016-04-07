@@ -12,6 +12,14 @@ export default class Setting {
     Setting.update(this, callback);
   }
 
+  static find(callback) {
+    DatabaseService.db.transaction((tx) => {
+      tx.executeSql("SELECT * FROM settings;", [], (tx, { rows }) => {
+        callback(null, new Setting(rows[0]));
+      }, ErrorHandler);
+    }, ErrorHandler)
+  }
+
   static findOrCreate(callback) {
     DatabaseService.db.transaction((tx) => {
       console.log('Starting transaction...');

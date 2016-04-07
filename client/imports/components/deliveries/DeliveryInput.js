@@ -42,6 +42,12 @@ export default class DeliveryInput extends Component {
       value: CREDIT_CARD_SLIP,
       text: 'Credit Slip'
     }];
+    var buttons = delivery._isNew ?
+      [<button key={1} className="waves-effect waves-light btn col s11" style={{ margin: '10px' }} onClick={ this.props.onSave }>Add Delivery</button>] :
+      [
+        <button key={2} className="waves-effect waves-light btn" onClick={ this.props.onDelete }>Delete</button>,
+        <button key={3} className="waves-effect waves-light btn" onClick={ this.props.onSave }>Update Delivery</button>
+      ];
 
     return (
       <div className='card grey lighten-4 row' style={{ margin: '10px 10px 10px 10px' }}>
@@ -80,7 +86,7 @@ export default class DeliveryInput extends Component {
         </div>
 
         <div className='container'>
-          <button className="waves-effect waves-light btn col s11" style={{ margin: '10px' }} onClick={ this.props.onSave }>{ delivery._isNew ? 'Add' : 'Update' } Delivery</button>
+          { buttons }
         </div>
       </div>
     );

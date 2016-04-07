@@ -16,7 +16,12 @@ class DatabaseService {
         "endTime VARCHAR(8)," +
         "clockInTime DATETIME," +
         "clockOutTime DATETIME," +
-        "job VARCHAR(20));", [], null, ErrorHandler);
+        "job VARCHAR(20)," +
+        "hourlyRate DECIMAL(4,2)," +
+        "outBonus DECIMAL(4,2)," +
+        "debitFee DECIMAL(4,2)," +
+        "unitBonus DECIMAL(4,2)" +
+        ");", [], null, ErrorHandler);
 
       tx.executeSql("CREATE TABLE IF NOT EXISTS deliveries (" +
         "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
