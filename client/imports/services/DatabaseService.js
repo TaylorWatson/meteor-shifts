@@ -1,4 +1,7 @@
 import ErrorHandler from './ErrorHandler';
+import { SampleShifts, SampleDeliveries } from './seed/seed';
+import Shift from '../models/Shift';
+import Delivery from '../models/Delivery';
 
 class DatabaseService {
 
@@ -28,8 +31,7 @@ class DatabaseService {
         "shiftId INTEGER," +
         "deliveryNumber INTEGER," +
         "tipAmount DOUBLE," +
-        "paymentType INTEGER," +
-        "deliveryAmount DOUBLE);", [], null, ErrorHandler);
+        "paymentType INTEGER);", [], null, ErrorHandler);
 
       tx.executeSql("CREATE TABLE IF NOT EXISTS settings (" +
         "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
@@ -54,7 +56,7 @@ class DatabaseService {
 
     let i = 0;
 
-    recursiveTransaction = (tx) => {
+    let recursiveTransaction = (tx) => {
       let statement = statements.shift();
       if (statement) {
         tx.executeSql(statement, [], recursiveTransaction, ErrorHandler);
@@ -64,6 +66,27 @@ class DatabaseService {
     }
 
     this.db.transaction(recursiveTransaction, ErrorHandler);
+  }
+
+  seed() {
+    let addShift = shift => {
+      this.db.transaction(tx => {
+        tx.executeSql("INSERT INTO shifts(title, startTime, clockInTime, clockOutTime, hourlyRate, outBonus, debitFee, unitBonus) VALUES (?,?,?,?,?,?,?,?);", [
+          shift.title, shift.startTime, shift.clockInTime, shift.clockOutTime, shift.hourlyRate, shift.outBonus, shift.debitFee, shift.unitBonus
+        ], null, ErrorHandler);
+      }, ErrorHandler);
+    }
+
+    let addDelivery = delivery => {
+      this.db.transaction(tx => {
+        tx.executeSql("INSERT INTO deliveries(shiftId, deliveryNumber, tipAmount, paymentType) VALUES (?,?,?,?);", [
+          delivery.shiftId, delivery.deliveryNumber, delivery.tipAmount, delivery.paymentType
+        ], null, ErrorHandler);
+      }, ErrorHandler);
+    }
+
+    _.each(SampleShifts, addShift);
+    _.each(SampleDeliveries, addDelivery);
   }
 
 }
