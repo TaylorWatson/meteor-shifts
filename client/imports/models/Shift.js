@@ -103,7 +103,8 @@ export default class Shift {
             hoursWorked,
             incomeEarned,
             numberOfDeliveries,
-            totalTips
+            totalTips,
+            deliveryIncome: numberOfDeliveries * this.unitBonus
           });
         }
       });

@@ -22,7 +22,7 @@ export const SampleShifts = [{
   title: "Test 3",
   startTime: new Date(),
   clockInTime: (moment(new Date()).add({ days: 1 })).toDate(),
-  clockOutTime: (moment(new Date()).set({ days: 1, hours: 5 })).toDate(),
+  clockOutTime: (moment(new Date()).add({ days: 1, hours: 5 })).toDate(),
   hourlyRate: 7,
   outBonus: 1.1,
   debitFee: 1.5,

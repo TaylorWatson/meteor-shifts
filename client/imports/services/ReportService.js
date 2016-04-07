@@ -21,8 +21,7 @@ export default class ReportService {
       Promise.all(
         _.map(filtered, f => f.getTotalsPromise())
       ).then((results) => {
-        console.log('All totals have been gotten.');
-        console.log(results);
+        callback(null, results);
       }).catch(function() {
         console.error('An error occured in the promise chain:');
         console.log(arguments);

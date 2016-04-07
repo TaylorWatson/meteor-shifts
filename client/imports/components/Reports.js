@@ -17,8 +17,13 @@ export default class Reports extends Component {
 
   handleChange(e) {
     let state = this.state;
-    state[e.target.name] = moment()[e.target.name == 'startDate' ? 'startOf' : 'endOf']('day');
+    if (e.target.name === 'startDate') {
+      state.startDate = moment(new Date()).startOf('day');
+    } else {
+      state.endDate = moment(new Date()).endOf('day');
+    }
     state[e.target.name].set(e.target.value);
+    console.log('New state: ', state);
     this.setState({ ...state });
   }
 
@@ -28,8 +33,8 @@ export default class Reports extends Component {
       Materialize.toast('Please select a date range.', 3500);
     } else {
       ReportService.generateReport(startDate, endDate, (err, data) => {
-        console.log('data found!');
-        console.log(data);
+        console.log('Data returned: ', data);
+        this.setState({ data });
       });
     }
   }
@@ -60,7 +65,33 @@ export default class Reports extends Component {
     );
   }
 
-  renderData() {}
+  renderData() {
+    let totalIncome = _.sumBy(this.state.data, d => (
+      d.incomeEarned + d.deliveryIncome
+    ));
+
+    return (
+      <div className="container">
+        <br/>
+        <h3>Report:</h3>
+
+        <table className="bordered">
+          <thead>
+            <tr>
+              <th>Deliveries</th>
+              <th>Total Income</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{ _.sumBy(this.state.data, 'numberOfDeliveries') }</td>
+              <td>${ totalIncome.toFixed(2) }</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    );
+  }
 
   render() {
     return this.state.data ? this.renderData() : this.renderPicker();
