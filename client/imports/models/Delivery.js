@@ -10,22 +10,36 @@ export default class Delivery {
 		this.shiftId = delivery.shiftId;
 		this.deliveryNumber = delivery.deliveryNumber || '';
 		this.tipAmount = delivery.tipAmount;
-		this.paymentOption = delivery.paymentOption || 1;
+		this.paymentType = delivery.paymentType || 0;
 		this.isOut = delivery.isOut || false;
-		this.deliveryAmount = delivery.deliveryAmount || 0;
 		this.errors = [];
+
+    if (delivery.id) {
+      this.id = delivery.id;
+      this._isNew = false;
+    } else {
+      this._isNew = true;
+    }
 	}
+
+  save(callback) {
+    this.validate((err) => {
+      if (err) {
+        callback(err);
+      } else {
+        if (this._isNew) {
+          Delivery.addDelivery(this, callback);
+        } else {
+          Delivery.update(this, callback);
+        }
+      }
+    });
+  }
 
 	validate(callback) {
 
 		this.errors.length = 0;
 
-		if (!tipAmount) {
-			this.errors.push({ tipAmount: "Tip amount is required." });
-		}
-		if (!deliveryAmount && deliveryAmount !== 0) {
-			this.errors.push({ deliveryAmount: "Delivery amount is required." });
-		}
 		if (!this.deliveryNumber) {
 			this.errors.push({ deliveryNumber: "Delivery number is required." });
 		}
@@ -38,60 +52,70 @@ export default class Delivery {
 		}
 	}
 
-	addDelivery(delivery, callback) {
+  static checkDeliveryNumber(delivery, callback) {
     DatabaseService.db.transaction(tx => {
-
-
       let sql = 'SELECT * FROM deliveries WHERE shiftId=? AND deliveryNumber=?';
       let options = [
         delivery.shiftId.toString(),
         delivery.deliveryNumber
       ];
 
+      if (!delivery._isNew) {
+        sql += ' AND id<>?';
+        options.push(delivery.id);
+      }
 
-      tx.executeSql(sql, options, (tx, result) => {
-
-
-        if (result.rows.length) {
-          callback("Duplicate delivery number in this shift.");
-          console.log(result);
-          return;
+      tx.execute(sql, options, (tx, result) => {
+        if (results.rows.length) {
+          callback("Delivery already exists.");
+        } else {
+          callback();
         }
-        console.log('inserting into deliveries');
-        let sql = 'INSERT INTO deliveries ' +
-        '(shiftId, deliveryNumber, tipAmount, paymentType, deliveryAmount) ' +
-        'VALUES (?,?,?,?,?);';
-
-        let options = [
-          delivery.shiftId,
-          delivery.deliveryNumber,
-          delivery.tipAmount,
-          delivery.paymentType,
-          delivery.deliveryAmount
-        ];
-
-        tx.executeSql(sql, options, (tx, result) => {
-          callback(null, result);
-        }, ErrorHandler);
-
       }, ErrorHandler);
-
-    }, ErrorHandler, () => { console.log('SUCCESS ADDED DELIVERY W00T'); });
+    }, ErrorHandler);
   }
 
-  insert(delivery, callback) {
+	static addDelivery(delivery, callback) {
+    Delivery.checkDeliveryNumber(delivery, err => {
+      if (err) {
+        callback("Delivery number already exists in shift.");
+      } else {
+
+        DatabaseService.db.transaction(tx => {
+
+          let sql = 'INSERT INTO deliveries ' +
+          '(shiftId, deliveryNumber, tipAmount, paymentType) ' +
+          'VALUES (?,?,?,?);';
+
+          let options = [
+            delivery.shiftId,
+            delivery.deliveryNumber,
+            delivery.tipAmount || 0,
+            delivery.paymentType
+          ];
+
+          tx.executeSql(sql, options, (tx, result) => {
+            callback(null, result);
+          }, ErrorHandler);
+
+        }, ErrorHandler);
+
+      }
+    });
+  }
+
+  static insert(delivery, callback) {
 
     DatabaseService.db.transaction(tx => {
       let sql = 'INSERT INTO deliveries' +
-      '(shiftId, deliveryNumber, tipAmount, paymentType, deliveryAmount)' +
+      '(shiftId, deliveryNumber, tipAmount, paymentType)' +
       'VALUES (?,?,?,?,?);';
 
       let options = [
         delivery.shiftId,
         delivery.deliveryNumber,
         delivery.tipAmount,
-        delivery.paymentType,
-        delivery.deliveryAmount];
+        delivery.paymentType];
 
       tx.executeSql(sql, options, (tx, result) => {
 
@@ -101,28 +125,34 @@ export default class Delivery {
     }, ErrorHandler);
   }
 
-  update(delivery, callback) {
+  static update(delivery, callback) {
 
-    DatabaseService.db.transaction(tx => {
-      let sql ="UPDATE deliveries SET" +
-      'deliveryNumber=?, tipAmount=?, paymentType=?, deliveryAmount=?' +
-      'WHERE id=?;';
+    Delivery.checkDeliveryNumber(delivery, err => {
+      if (err) callback(err);
+      else {
 
-      let options = [
-        delivery.deliveryNumber,
-        delivery.tipAmount,
-        delivery.paymentType,
-        delivery.deliveryAmount,
-        delivery.id];
+        DatabaseService.db.transaction(tx => {
+          let sql ="UPDATE deliveries SET " +
+          'deliveryNumber=?, tipAmount=?, paymentType=? ' +
+          'WHERE id=?;';
 
-        tx.executeSql(sql, options, (tx, result) => {
+          let options = [
+            delivery.deliveryNumber,
+            delivery.tipAmount,
+            delivery.paymentType,
+            delivery.id];
 
-          callback(null, result);
+            tx.executeSql(sql, options, (tx, result) => {
+
+              callback(null, result);
+            }, ErrorHandler);
         }, ErrorHandler);
-    }, ErrorHandler);
+
+      }
+    });
   }
 
-  delete(number, callback) {
+  static delete(number, callback) {
     DatabaseService.db.transaction(tx => {
       let sql = 'DELETE FROM deliveries WHERE id=?;';
 
@@ -133,15 +163,15 @@ export default class Delivery {
     }, ErrorHandler);
   }
 
-  deliveryList(shiftId, callback) {
-  	console.log('delivery List starting')
+  static deliveryList(shiftId, callback) {
+    if (!shiftId) throw new Error("Shift ID is required to obtain a list of deliveries.");
     DatabaseService.db.transaction(tx => {
       let sql = 'SELECT * FROM deliveries WHERE shiftId=?;';
       tx.executeSql(sql, [shiftId], (tx, result) => {
 
         let deliveries = _.map(result.rows, d => new Delivery(d));
-        console.log(deliveries);
-    callback(null, deliveries);
+        callback(null, deliveries);
+
   		}, ErrorHandler);
   	}, ErrorHandler);
   }

@@ -35,7 +35,7 @@ export default class Setting {
 
         }
       }, ErrorHandler);
-    }, null, ErrorHandler)
+    }, ErrorHandler);
   }
 
   static update(shift, callback) {
@@ -51,7 +51,7 @@ export default class Setting {
           shift.unitBonus,
           shift.id
         ], callback, ErrorHandler);
-    }, null, ErrorHandler);
+    }, ErrorHandler);
   }
 
 }

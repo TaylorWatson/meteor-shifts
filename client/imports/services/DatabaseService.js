@@ -49,8 +49,8 @@ class DatabaseService {
 
     let i = 0;
 
-    function recursiveTransaction(tx) {
-      let statement = statemnets.shift();
+    recursiveTransaction = (tx) => {
+      let statement = statements.shift();
       if (statement) {
         tx.executeSql(statement, [], recursiveTransaction, ErrorHandler);
       } else {

@@ -18,57 +18,19 @@ export default class DeliveryInput extends Component {
 
   constructor(props) {
     super(props);
-    this.handleChange = this.handleChange.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
-    this.submitDelivery = this.submitDelivery.bind(this);
-    if (this.props.shiftId) {
-      this.state = {
-      delivery: new Delivery({ shiftId: this.props.shiftId })
-      }
-    }
   }
-
-  handleChange(e) {
-    let { delivery } = this.state;
-
-    _.set(delivery, e.target.name, e.target.value);
-
-    console.log(delivery);
-
-    this.setState({ delivery });
-  }
-
 
   handleToggle(e) {
-    let { delivery } = this.state;
-
-    delivery.isOut = !delivery.isOut;
-
-    console.log(delivery);
-
-    this.setState({ delivery });
-  }
-
-  submitDelivery() {
-
-    let { delivery } = this.state;
-
-    Delivery.addDelivery(delivery, (err, result) => {
-
-      if (err) {
-        console.log('ERROR!');
-      } else {
-        console.log('Success!');
-      }
-
-    });
-    console.log('SUBMITTING DELIVERY: ', delivery);
+    let { delivery } = this.props;
+    delivery.isOut ?
+    this.props.onChange({ target: { name: e.target.name, value: false } }) :
+    this.props.onChange({ target: { name: e.target.name, value: true } });
   }
 
   render() {
 
-    let { delivery } = this.state;
-    {/*let options = ['Cash', 'Debit', 'Credit slip'];*/}
+    let { delivery } = this.props;
 
     let options = [{
       value: CASH,
@@ -88,20 +50,14 @@ export default class DeliveryInput extends Component {
           <InputField
             label="Delivery Number"
             name="deliveryNumber"
-            onChange={ this.handleChange }
+            onChange={ this.props.onChange }
             value={ delivery.deliveryNumber } />
 
           <InputField
             label="Tip Amount"
             name="tipAmount"
-            onChange={ this.handleChange }
+            onChange={ this.props.onChange }
             value={ delivery.tipAmount } />
-
-         <InputField
-            label="Delivery Amount"
-            name="deliveryAmount"
-            onChange={ this.handleChange }
-            value={ delivery.deliveryAmount } />
 
           <div className="switch row">
             <div className='col s9' style={{ marginTop: '5px' }}>
@@ -109,7 +65,7 @@ export default class DeliveryInput extends Component {
             </div>
             <div className='col s3'>
               <label>
-                <input type="checkbox" onChange={ this.handleToggle } checked={ delivery.isOut } style={{ marginRight: '10px' }} />
+                <input type="checkbox" onChange={ this.handleToggle } name="isOut" checked={ delivery.isOut } style={{ marginRight: '10px' }} />
                 <span className="lever"></span>
               </label>
             </div>
@@ -117,13 +73,15 @@ export default class DeliveryInput extends Component {
 
           <SelectOption
             options={ options }
-            name="paymentOption"
+            name="paymentType"
             value={ delivery.paymentType }
-            onChange={ this.handleChange } />
-         </div>
-         <div className='container'>
-          <button className="waves-effect waves-light btn col s11" style={{ margin: '10px' }} onClick={ this.submitDelivery }>Add Delivery</button>
-         </div>
+            onChange={ this.props.onChange } />
+
+        </div>
+
+        <div className='container'>
+          <button className="waves-effect waves-light btn col s11" style={{ margin: '10px' }} onClick={ this.props.onSave }>{ delivery._isNew ? 'Add' : 'Update' } Delivery</button>
+        </div>
       </div>
     );
   }

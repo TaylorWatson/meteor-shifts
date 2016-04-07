@@ -13,6 +13,13 @@ export default class SelectOption extends Component {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.value !== this.props.value) {
+      console.log('Updating select...');
+      $(this.refs.select).material_select();
+    }
+  }
+
   componentWillUnmount() {
     $(this.refs.select).material_select('destroy');
   }

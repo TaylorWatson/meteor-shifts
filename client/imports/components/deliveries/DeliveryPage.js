@@ -14,16 +14,23 @@ export default class DeliveryPage extends Component {
     super(props);
     this.state = {
       deliveries: [],
-      selectedTab: 1
+      selectedTab: 1,
+      delivery: new Delivery({ shiftId: this.props.shiftId })
     }
+
+    this.handleTabChange = this.handleTabChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.refreshDeliveries = this.refreshDeliveries.bind(this);
+    this.selectDelivery = this.selectDelivery.bind(this);
   }
 
   navBack() {
     window.history.back();
   }
 
-  componentDidMount(prevProps){
-    // this.deliveryList();
+  componentDidMount(){
+    this.refreshDeliveries();
     $(this.refs.tabs).tabs();
     $(this.refs.tabs).tabs('select_tab', 'add');
   }
@@ -32,24 +39,46 @@ export default class DeliveryPage extends Component {
     this.setState({ value: value })
   }
 
-  deliveryList() {
-    Delivery.deliveryList(this.props.shiftId, delivery => {
-      this.setState({ deliveries: delivery })
-    });
-    console.log(this.state.deliveries);
+  handleChange(e) {
+    let { delivery } = this.state;
+    let { target: { value:v, name:n } } = e;
+
+    delivery[n] = v;
+    this.setState({ delivery });
   }
 
-  logChange(val) {
-    console.log("Selected: " + val);
+  handleSave() {
+    let { delivery } = this.state;
+    delivery.save((err, result) => {
+      if (err) {
+        Materialize.toast(err, 3500);
+      } else {
+        this.setState({ delivery: new Delivery({ shiftId: this.props.shiftId }) });
+        this.refreshDeliveries();
+      }
+    });
+  }
+
+  refreshDeliveries() {
+    Delivery.deliveryList(this.props.shiftId, (err, deliveries) => {
+      this.setState({ deliveries });
+    });
+  }
+
+  selectDelivery(delivery) {
+    return () => {
+      this.setState({ delivery });
+      $(this.refs.tabs).tabs('select_tab', 'add');
+    }
   }
 
   render() {
 
-
     let deliveryList = this.state.deliveries.map((delivery) => (
       <DeliverySingle
         delivery={ delivery }
-        key={ delivery.id } />
+        key={ delivery.id }
+        onClick={ this.selectDelivery(delivery) } />
     ));
 
     return(
@@ -61,10 +90,14 @@ export default class DeliveryPage extends Component {
           </ul>
         </div>
         <div id="add" className="col s12">
-          <DeliveryInput shiftId={ this.props.shiftId }/>
+          <DeliveryInput delivery={ this.state.delivery } onChange={ this.handleChange } onSave={ this.handleSave }/>
         </div>
         <div id="view" className="col s12">
-          { deliveryList }
+
+          <ul className="collection" id='deliveries'>
+            { deliveryList }
+          </ul>
+
         </div>
       </div>
     );
