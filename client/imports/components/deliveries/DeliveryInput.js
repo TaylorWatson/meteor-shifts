@@ -43,10 +43,12 @@ export default class DeliveryInput extends Component {
       text: 'Credit Slip'
     }];
     var buttons = delivery._isNew ?
-      [<button key={1} className="waves-effect waves-light btn col s11" style={{ margin: '10px' }} onClick={ this.props.onSave }>Add Delivery</button>] :
       [
-        <button key={2} className="waves-effect waves-light btn" onClick={ this.props.onDelete }>Delete</button>,
-        <button key={3} className="waves-effect waves-light btn" onClick={ this.props.onSave }>Update Delivery</button>
+        <button key={1} className="waves-effect waves-light btn col s11" style={{ width: '100%', margin: '5px' }} onClick={ this.props.onSave }>Add Delivery</button>,
+        <button key={2} className="waves-effect waves-light btn" style={{ width: '100%', margin: '5px 5px 10px 5px' }} onClick={ this.props.clockOut }>Clock Out</button>] :
+      [
+        <button key={2} className="waves-effect waves-light btn" style={{ width: '100%', margin: '5px' }} onClick={ this.props.onDelete }>Delete</button>,
+        <button key={3} className="waves-effect waves-light btn" style={{ width: '100%', margin: '5px 5px 10px 5px' }} onClick={ this.props.onSave }>Update Delivery</button>
       ];
 
     return (

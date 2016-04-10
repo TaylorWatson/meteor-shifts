@@ -103,8 +103,8 @@ export default class DeliveryPage extends Component {
           </ul>
         </div>
         <div id="add" className="col s12">
-          <DeliveryInput delivery={ this.state.delivery } onChange={ this.handleChange } onSave={ this.handleSave }/><br />
-          <div className="waves-effect waves-light btn" style={{ width: '100%' }} onClick={ this.clockOut }>Clock Out</div>
+          <DeliveryInput delivery={ this.state.delivery } clockOut={ this.clockOut } onChange={ this.handleChange } onSave={ this.handleSave }/><br />
+
         </div>
         <div id="view" className="col s12">
 
