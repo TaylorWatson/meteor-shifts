@@ -54,7 +54,7 @@ export default class Home extends Component {
           currentlyClockedIn={ currentlyClockedIn }
           onClick={ this.selectShift }
           key={ shift.id } />
-      ));
+      )).reverse();
 
     } else {
       shiftList = <p style={{ paddingLeft: '20px' }} className="flow-text">No upcoming shifts.</p>
@@ -71,64 +71,3 @@ export default class Home extends Component {
 Home.propTypes = {
   shifts: PropTypes.array.isRequired
 }
-
-
-        // <li className='collection-item'>
-        //   <div className='card grey lighten-4 row waves-effect waves-block default'>
-        //   <div className='card-content'>
-        //     <h5 className='activator'>Sunday the 5th<MoreVertIcon className='activator right' color={ "black" } /></h5>
-        //     <p>Shift Title: Chicken <br /> Shift location: Butt</p>
-        //   </div>
-        //   <div className='card-reveal'>
-        //     <span className='card-title' style={{ margin: '5px' }}><CloseIcon className='right card-title' color={ "black" } /></span>
-        //     <a className="waves-effect waves-light btn" key={ 1 } style={{ margin: '0 0 10px 0' }} >Resume Shift</a><br />
-        //     <a className="waves-effect waves-light btn" key={ 2 } >End Shift</a>
-        //   </div>
-        //   </div>
-        // </li>
-
-        // <li className='collection-item card grey lighten-4 row waves-effect waves-block default' style={{ margin: '10px 10px 10px 10px' }}>
-        //   <div className='card-content'>
-        //     <h5 className='activator'>Sunday the 5th<MoreVertIcon className='activator right' color={ "black" } /></h5>
-        //     <p>Shift Title: Chicken <br /> Shift location: Butt</p>
-        //   </div>
-        //   <div className='card-reveal'>
-        //     <span className='card-title' style={{ margin: '5px' }}><CloseIcon className='right card-title' color={ "black" } /></span>
-        //     <a className="waves-effect waves-light btn" key={ 1 } style={{ margin: '0 0 10px 0' }} >Resume Shift</a><br />
-        //     <a className="waves-effect waves-light btn" key={ 2 } >End Shift</a>
-        //   </div>
-        // </li>
-
-        // <li className='collection-item card grey lighten-4 row waves-effect waves-block default' style={{ margin: '10px 10px 10px 10px' }}>
-        //   <div className='card-content'>
-        //     <h5 className='activator'>Sunday the 5th<MoreVertIcon className='activator right' color={ "black" } /></h5>
-        //     <p>Shift Title: Chicken <br /> Shift location: Butt</p>
-        //   </div>
-        //   <div className='card-reveal'>
-        //     <span className='card-title' style={{ margin: '5px' }}><CloseIcon className='right card-title' color={ "black" } /></span>
-        //     <a className="waves-effect waves-light btn" key={ 1 } style={{ margin: '0 0 10px 0' }} >Resume Shift</a><br />
-        //     <a className="waves-effect waves-light btn" key={ 2 } >End Shift</a>
-        //   </div>
-        // </li>
-        // <li className='collection-item card grey lighten-4 row waves-effect waves-block default' style={{ margin: '10px 10px 10px 10px' }}>
-        //   <div className='card-content'>
-        //     <h5 className='activator'>Sunday the 5th<MoreVertIcon className='activator right' color={ "black" } /></h5>
-        //     <p>Shift Title: Chicken <br /> Shift location: Butt</p>
-        //   </div>
-        //   <div className='card-reveal'>
-        //     <span className='card-title' style={{ margin: '5px' }}><CloseIcon className='right card-title' color={ "black" } /></span>
-        //     <a className="waves-effect waves-light btn" key={ 1 } style={{ margin: '0 0 10px 0' }} >Resume Shift</a><br />
-        //     <a className="waves-effect waves-light btn" key={ 2 } >End Shift</a>
-        //   </div>
-        // </li>
-        // <li className='collection-item card grey lighten-4 row waves-effect waves-block default' style={{ margin: '10px 10px 10px 10px' }}>
-        //   <div className='card-content'>
-        //     <h5 className='activator'>Sunday the 5th<MoreVertIcon className='activator right' color={ "black" } /></h5>
-        //     <p>Shift Title: Chicken <br /> Shift location: Butt</p>
-        //   </div>
-        //   <div className='card-reveal'>
-        //     <span className='card-title' style={{ margin: '5px' }}><CloseIcon className='right card-title' color={ "black" } /></span>
-        //     <a className="waves-effect waves-light btn" key={ 1 } style={{ margin: '0 0 10px 0' }} >Resume Shift</a><br />
-        //     <a className="waves-effect waves-light btn" key={ 2 } >End Shift</a>
-        //   </div>
-        // </li>

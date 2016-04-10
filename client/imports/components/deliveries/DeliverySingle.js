@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import Numeral from 'numeral';
 
 //import { DeliveryService } from '../services/delivery-service';
 // import { FloatingHeader } from './floating-header.jsx';
@@ -33,7 +34,7 @@ export default class DeliverySingle extends Component {
 		return(
 			<li onClick={ this.props.onClick } className="collection-item card grey lighten-4 row waves-effect waves-block default" style={{ margin: '10px 10px 10px 10px' }}>
     		<h5>Delivery Number: { deliveryNumber }</h5>
-	      <p>Tip Amount: ${ tipAmount.toFixed(2) } <br />
+	      <p>Tip Amount: { numeral(tipAmount).format('$0,0.00') } <br />
 	         Payment Type: { payment }
 	      </p>
 		  </li>

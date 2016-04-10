@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import DatePicker from './ui/DatePicker';
 import ReportService from '../services/ReportService';
+import Numeral from 'numeral';
 
 import moment from 'moment';
 
@@ -57,8 +58,8 @@ export default class Reports extends Component {
           label="End Date"
           value={ this.state.endDate } />
 
-        <div style={{ width: '100%' }} 
-             className="waves-effect waves-light btn blue-grey" 
+        <div style={{ width: '100%' }}
+             className="waves-effect waves-light btn blue-grey"
              onClick={ this.generate }>Generate!</div>
 
       </div>
@@ -69,6 +70,9 @@ export default class Reports extends Component {
     let totalIncome = _.sumBy(this.state.data, d => (
       d.incomeEarned + d.deliveryIncome
     ));
+    let totalTips = _.sumBy(this.state.data, d => (
+      d.totalTips));
+
 
     return (
       <div className="container">
@@ -80,12 +84,14 @@ export default class Reports extends Component {
             <tr>
               <th>Deliveries</th>
               <th>Total Income</th>
+              <th>Total Tips</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>{ _.sumBy(this.state.data, 'numberOfDeliveries') }</td>
-              <td>${ totalIncome.toFixed(2) }</td>
+              <td>{ numeral(totalIncome).format('$0,0.00') }</td>
+              <td>{ numeral(totalTips).format('$0,0.00') }</td>
             </tr>
           </tbody>
         </table>
