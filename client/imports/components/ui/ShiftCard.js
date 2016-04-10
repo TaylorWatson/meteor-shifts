@@ -22,6 +22,10 @@ export default class ShiftCard extends Component {
     FlowRouter.go(`/shifts/${this.props.shift.id}`);
   }
 
+  delete() {
+
+  }
+
   start() {
 
     Shift.clockInTime(this.props.shift.id, (err) => {
@@ -60,6 +64,7 @@ export default class ShiftCard extends Component {
       buttons.push(<a className="waves-effect waves-light btn" key={ 2 } style={{ margin: '0 10px 10px 0' }} onClick={ this.review } >Review Shift</a>);
     if (clockInTime !== "undefined" && clockOutTime == "undefined")
       buttons.push(<a className="waves-effect waves-light btn" key={ 3 } style={{ margin: '0 0 10px 0' }} onClick={ this.resume }>Resume Shift</a>);
+    buttons.push(<a className="waves-effect waves-light btn" key={ 3 } style={{ margin: '0 0 10px 0' }} onClick={ this.delete }>Delete Shift</a>)
 
     return (
         <div className='card grey lighten-4 row waves-effect waves-block default' style={{ margin: '10px 10px 10px 10px' }}>
