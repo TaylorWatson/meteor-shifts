@@ -20,6 +20,7 @@ export default class DeliveryPage extends Component {
 
     this.handleTabChange = this.handleTabChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.refreshDeliveries = this.refreshDeliveries.bind(this);
     this.selectDelivery = this.selectDelivery.bind(this);
@@ -61,6 +62,12 @@ export default class DeliveryPage extends Component {
     });
   }
 
+  handleCancel() {
+    this.setState({
+      delivery: new Delivery({ shiftId: this.props.shiftId })
+    })
+  }
+
   refreshDeliveries() {
     Delivery.deliveryList(this.props.shiftId, (err, deliveries) => {
       this.setState({ deliveries });
@@ -97,7 +104,7 @@ export default class DeliveryPage extends Component {
         </div>
         <div id="add" className="col s12">
 
-          <DeliveryInput delivery={ this.state.delivery } viewSummary={ this.viewSummary } onChange={ this.handleChange } onSave={ this.handleSave }/><br />
+          <DeliveryInput delivery={ this.state.delivery } viewSummary={ this.viewSummary } onChange={ this.handleChange } onCancel={ this.handleCancel } onSave={ this.handleSave }/><br />
 
         </div>
         <div id="view" className="col s12">

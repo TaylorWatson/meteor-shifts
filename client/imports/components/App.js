@@ -37,7 +37,7 @@ export default class App extends Component {
 
     return (
       <div>
-
+        <div className='navbar-fixed'>
         <nav className="blue-grey darken-4">
           <div className="nav-wrapper">
             <a href="#" className="brand-logo">{ this.props.title }</a>
@@ -58,7 +58,7 @@ export default class App extends Component {
             </ul>
           </div>
         </nav>
-
+        </div>
         { this.props.content }
 
       </div>

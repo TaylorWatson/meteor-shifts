@@ -47,10 +47,11 @@ export default class DeliveryInput extends Component {
     var buttons = delivery._isNew ?
       [
         <button key={1} className="waves-effect waves-light btn col s11" style={{ width: '100%', margin: '5px 0px 5px 0px' }} onClick={ this.props.onSave }>Add Delivery</button>,
-        <button key={3} className="waves-effect waves-light btn" style={{ width: '100%', margin: '5px 0px 10px 0px' }} onClick={ this.props.viewSummary }>View Summary</button>
+        <button key={2} className="waves-effect waves-light btn" style={{ width: '100%', margin: '5px 0px 10px 0px' }} onClick={ this.props.viewSummary }>View Summary</button>
       ] : [
+        <button key={3} className="waves-effect waves-light btn" style={{ width: '100%', margin: '5px 0px 5px 0px' }} onClick={ this.props.onCancel }>Cancel</button>,
         <button key={4} className="waves-effect waves-light btn" style={{ width: '100%', margin: '5px 0px 5px 0px' }} onClick={ this.props.onDelete }>Delete</button>,
-        <button key={5} className="waves-effect waves-light btn" style={{ width: '100%', margin: '5px 0px 10px 0px' }} onClick={ this.props.onSave }>Update Delivery</button>
+        <button key={5} className="waves-effect waves-light btn" style={{ width: '100%', margin: '5px 0px 10px 0px' }} onClick={ this.props.onSave }>Update</button>
       ];
 
     return (

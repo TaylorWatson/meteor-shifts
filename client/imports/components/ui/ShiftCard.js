@@ -54,7 +54,7 @@ export default class ShiftCard extends Component {
 
     startTime = moment(new Date(startTime));
 
-    let day = moment(new Date(startTime)).format('D, MMMM, YYYY h:mm a');
+    let day = moment(new Date(startTime)).format('MMMM D, h:mm a');
     if (endTime !== "undefined") day += ' to ' + endTime;
 
     let buttons = [<a className="waves-effect waves-light btn" key={ 1 } style={{ width: '100%', margin: '0 0px 10px 0' }} onClick={ this.edit } >Edit Shift</a>];
@@ -72,13 +72,13 @@ export default class ShiftCard extends Component {
       hasLocation = '';
     }
     return (
-      <li style={{ margin: '10px' }}>
-        <div className="collapsible-header" style={{ padding: '5px 5px 5px 5px'}}>
-          <h5 className='flow-text'><strong>{ title }</strong><MoreVertIcon className='activator right' color={ "black" } /></h5>
+      <li className='grey lighten-4' style={{ margin: '10px' }}>
+        <div className="collapsible-header grey lighten-4" style={{ padding: '5px 5px 5px 5px'}}>
+          <h5 className='flow-text'><strong>{ day }</strong><MoreVertIcon className='activator right' color={ "black" } /></h5>
+          <h5 className='flow-text'><strong>{ title }</strong></h5>
           <h5 className='flow-text'>{ hasLocation }</h5>
-          <h5 className='flow-text'>{ day }</h5>
         </div>
-        <div className="collapsible-body" style={{padding: '10px 10px 0px 10px'}}>
+        <div className="collapsible-body grey lighten-4" style={{padding: '10px 10px 0px 10px'}}>
               { buttons }
         </div>
       </li>
