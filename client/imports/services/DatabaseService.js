@@ -31,7 +31,8 @@ class DatabaseService {
         "shiftId INTEGER," +
         "deliveryNumber INTEGER," +
         "tipAmount DOUBLE," +
-        "paymentType INTEGER);", [], null, ErrorHandler);
+        "paymentType INTEGER," +
+        "isOut BOOLEAN);", [], null, ErrorHandler);
 
       tx.executeSql("CREATE TABLE IF NOT EXISTS settings (" +
         "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +

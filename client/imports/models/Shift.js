@@ -3,6 +3,7 @@ import moment from 'moment';
 import ErrorHandler from '../services/ErrorHandler';
 import Setting from './Setting';
 import { DatabaseService } from '../services/DatabaseService';
+import { DEBIT } from '../enum/paymentOptions';
 
 export default class Shift {
   constructor(shift) {
@@ -73,12 +74,18 @@ export default class Shift {
   }
 
   getHoursWorked() {
-    if (!this.clockInTime || !this.clockOutTime) {
-      throw new Error("Shift is not fully worked! Can not get hours worked.");
+    if (!this.clockInTime) {
+      throw new Error("Shift is not in process.");
     }
 
-    let end = moment(new Date(this.clockOutTime));
     let start = moment(new Date(this.clockInTime));
+    let end;
+    if (!this.clockOutTime || this.clockOutTime == "undefined") {
+      end = moment(new Date());
+    } else {
+      end = moment(new Date(this.clockOutTime));
+    }
+
     let duration = moment.duration(end.diff(start));
     let hours = duration.asHours();
     let minutes = duration.asMinutes();
@@ -95,16 +102,42 @@ export default class Shift {
           reject(err);
         } else {
           let hoursWorked = this.getHoursWorked();
-          let incomeEarned = hoursWorked * (this.hourlyRate || 1);
+          let hourlyIncomeEarned = hoursWorked * (this.hourlyRate || 1);
+
           let numberOfDeliveries = deliveries.length;
+          let deliveryBonusIncome = numberOfDeliveries * this.unitBonus;
+          let numberOfOuts = _.filter(deliveries, { isOut: true }).length;
+          let outBonusIncome = numberOfOuts * this.outBonus;
+
           let totalTips = _.sumBy(deliveries, 'tipAmount');
+          let numberOfStiffs = _.filter(deliveries, { tipAmount: 0 }).length;
+
+          let numberOfDebitFees = _.filter(deliveries, { paymentType: DEBIT }).length;
+          let debitFeeDeductions = numberOfDebitFees * this.debitFee;
+
+          let grandTotalIncome = (
+              hourlyIncomeEarned
+            + deliveryBonusIncome
+            + outBonusIncome
+            + totalTips
+            - debitFeeDeductions
+          );
+
+          let calculatedHourly = grandTotalIncome / hoursWorked;
 
           resolve({
             hoursWorked,
-            incomeEarned,
+            hourlyIncomeEarned,
             numberOfDeliveries,
             totalTips,
-            deliveryIncome: numberOfDeliveries * this.unitBonus
+            deliveryBonusIncome,
+            numberOfOuts,
+            outBonusIncome,
+            numberOfDebitFees,
+            debitFeeDeductions,
+            grandTotalIncome,
+            numberOfStiffs,
+            calculatedHourly
           });
         }
       });
@@ -117,6 +150,21 @@ export default class Shift {
       let sql = "SELECT * FROM shifts ORDER BY startTime;";
 
       tx.executeSql(sql, [], (tx, results) => {
+
+        _.each(results.rows, (shift) => {
+          shifts.push(new Shift(shift));
+        });
+
+        callback(null, shifts);
+      }, ErrorHandler);
+    }, ErrorHandler);
+  }
+
+  static findUpcoming(callback) {
+    let shifts = [];
+    DatabaseService.db.transaction(tx => {
+      let sql = "SELECT * FROM shifts WHERE startTime > ? AND clockOutTime = ? OR clockInTime IS NOT NULL AND clockOutTime = ?";
+      tx.executeSql(sql, [ moment(new Date()).subtract(6, 'hours'), 'undefined', 'undefined' ], (tx, results) => {
 
         _.each(results.rows, (shift) => {
           shifts.push(new Shift(shift));
@@ -203,7 +251,7 @@ export default class Shift {
   }
 
   static clockInTime(id, callback) {
-  
+
     Setting.find((err, setting) => {
 
       DatabaseService.db.transaction(tx => {

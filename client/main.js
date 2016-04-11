@@ -4,6 +4,7 @@ import Reports from './imports/components/Reports';
 import EditShift from './imports/components/EditShift';
 import DeliverySingle from './imports/components/deliveries/DeliverySingle';
 import DeliveryPage from './imports/components/deliveries/DeliveryPage';
+import ShiftOverview from './imports/components/ShiftOverview';
 import Settings from './imports/components/Settings';
 import { DatabaseService } from './imports/services/DatabaseService';
 import Title from './imports/reactive-vars/Title';
@@ -46,6 +47,13 @@ FlowRouter.route('/deliveries/:shiftId', {
   action(params) {
     Title.set('Deliveries');
     mount(App, { content: <DeliveryPage shiftId={ params.shiftId } /> });
+  }
+});
+
+FlowRouter.route('/deliveries/:shiftId/summary', {
+  action(params) {
+    Title.set('Close Shift');
+    mount(App, { content: <ShiftOverview shiftId={ params.shiftId } /> });
   }
 });
 

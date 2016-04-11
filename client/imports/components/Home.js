@@ -20,21 +20,42 @@ export default class Home extends Component {
 
   constructor() {
     super();
-
+    this.delete = this.delete.bind(this);
+    this.updateShiftsList = this.updateShiftsList.bind(this);
     this.state = {
       shifts: []
     }
   }
 
+  updateShiftsList() {
+    console.log('Updating shifts list...');
+    Shift.findUpcoming((err, shifts) => {
+      this.setState({ shifts });
+    });
+  }
+
   componentDidMount() {
     $(this.refs.test).sideNav();
     Materialize.showStaggeredList('#shifts');
-
-    Shift.find((err, shifts) => {
-      this.setState({ shifts });
-    })
+    this.updateShiftsList();
+    this.updateInterval = setInterval(this.updateShiftsList, 60000);
   }
 
+
+  componentWillUnmount() {
+    clearInterval(this.updateInterval);
+  }
+
+  delete(id) {
+    Shift.delete(id, (error, result) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('shift deleted');
+        this.updateShiftsList();
+      }
+    });
+  }
 
   addShift() {
     FlowRouter.go('/shifts');
@@ -52,9 +73,10 @@ export default class Home extends Component {
         <ShiftCard
           shift={ shift }
           currentlyClockedIn={ currentlyClockedIn }
+          delete={ this.delete }
           onClick={ this.selectShift }
           key={ shift.id } />
-      )).reverse();
+      ));
 
     } else {
       shiftList = <p style={{ paddingLeft: '20px' }} className="flow-text">No upcoming shifts.</p>

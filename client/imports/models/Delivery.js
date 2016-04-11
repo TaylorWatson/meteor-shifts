@@ -11,7 +11,7 @@ export default class Delivery {
 		this.deliveryNumber = delivery.deliveryNumber || '';
 		this.tipAmount = delivery.tipAmount;
 		this.paymentType = delivery.paymentType || 0;
-		this.isOut = delivery.isOut || false;
+		this.isOut = delivery.isOut == "true";
 		this.errors = [];
 
     if (delivery.id) {
@@ -87,15 +87,18 @@ export default class Delivery {
 
         DatabaseService.db.transaction(tx => {
 
+          console.log('DELIVERY: ', delivery);
+
           let sql = 'INSERT INTO deliveries ' +
-          '(shiftId, deliveryNumber, tipAmount, paymentType) ' +
-          'VALUES (?,?,?,?);';
+          '(shiftId, deliveryNumber, tipAmount, paymentType, isOut) ' +
+          'VALUES (?,?,?,?, ?);';
 
           let options = [
             delivery.shiftId,
             delivery.deliveryNumber,
             delivery.tipAmount || 0,
-            delivery.paymentType
+            delivery.paymentType,
+            delivery.isOut || false
           ];
 
           tx.executeSql(sql, options, (tx, result) => {

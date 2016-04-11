@@ -23,7 +23,7 @@ export default class DeliveryPage extends Component {
     this.handleSave = this.handleSave.bind(this);
     this.refreshDeliveries = this.refreshDeliveries.bind(this);
     this.selectDelivery = this.selectDelivery.bind(this);
-    this.clockOut = this.clockOut.bind(this);
+    this.viewSummary = this.viewSummary.bind(this);
   }
 
   navBack() {
@@ -52,7 +52,8 @@ export default class DeliveryPage extends Component {
     let { delivery } = this.state;
     delivery.save((err, result) => {
       if (err) {
-        Materialize.toast(err, 3500);
+        console.error(err);
+        Materialize.toast(err[0].deliveryNumber, 3500);
       } else {
         this.setState({ delivery: new Delivery({ shiftId: this.props.shiftId }) });
         this.refreshDeliveries();
@@ -73,16 +74,8 @@ export default class DeliveryPage extends Component {
     }
   }
 
-  clockOut() {
-    Shift.clockOutTime(this.props.shiftId, (err, result) => {
-      if (err) console.error(err);
-      else {
-        console.log('Clocked out!');
-        console.log(result);
-
-        FlowRouter.go('/');
-      }
-    });
+  viewSummary() {
+    FlowRouter.go(`/deliveries/${this.props.shiftId}/summary`);
   }
 
   render() {
@@ -103,7 +96,8 @@ export default class DeliveryPage extends Component {
           </ul>
         </div>
         <div id="add" className="col s12">
-          <DeliveryInput delivery={ this.state.delivery } clockOut={ this.clockOut } onChange={ this.handleChange } onSave={ this.handleSave }/><br />
+
+          <DeliveryInput delivery={ this.state.delivery } viewSummary={ this.viewSummary } onChange={ this.handleChange } onSave={ this.handleSave }/><br />
 
         </div>
         <div id="view" className="col s12">

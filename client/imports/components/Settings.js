@@ -52,28 +52,32 @@ export default class Settings extends Component {
           name="hourlyRate"
           onChange={ this.handleChange }
           value={ setting.hourlyRate }
-          icon={ <AttachMoney /> } />
+          icon={ <AttachMoney /> }
+          type="currency" />
 
         <InputField
           label="Out Bonus"
           name="outBonus"
           onChange={ this.handleChange }
           value={ setting.outBonus }
-          icon={ <AttachMoney /> } />
+          icon={ <AttachMoney /> }
+          type="currency" />
 
         <InputField
           label="Debit Fee"
           name="debitFee"
           onChange={ this.handleChange }
           value={ setting.debitFee }
-          icon={ <AttachMoney /> } />
+          icon={ <AttachMoney /> }
+          type="currency" />
 
         <InputField
           label="Delivery Bonus"
           name="unitBonus"
           onChange={ this.handleChange }
           value={ setting.unitBonus }
-          icon={ <AttachMoney /> } />
+          icon={ <AttachMoney /> }
+          type="currency" />
 
         <div onClick={ this.save } className="waves-effect waves-light btn" style={{ width: '100%' }}>
           Save Settings

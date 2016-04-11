@@ -5,6 +5,10 @@ export default class SelectOption extends Component {
     super()
   }
 
+  changeHandler() {
+    this.props.option($(this.refs.select).val());
+  }
+
   componentDidMount() {
     $(this.refs.select).material_select(() => {
           // This object is a fake 'event' ( event.target.value, event.target.name)
@@ -34,7 +38,7 @@ export default class SelectOption extends Component {
       <div className="input-field col s12">
         <label htmlFor={ this.props.name }>{ label }</label>
         <select ref="select" id={ this.props.name } name={ this.props.name } defaultValue='0' onChange={ this.changeHandler } value={ value }>
-          <option value='0' key='0' disabled >Payment Type</option>
+          <option value='0' key='0' disabled >Select Option</option>
           { selectOptions }
         </select>
       </div>

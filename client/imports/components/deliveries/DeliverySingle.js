@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import Numeral from 'numeral';
+import numeral from 'numeral';
 
 //import { DeliveryService } from '../services/delivery-service';
 // import { FloatingHeader } from './floating-header.jsx';

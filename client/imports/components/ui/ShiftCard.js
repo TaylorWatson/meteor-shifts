@@ -14,16 +14,13 @@ export default class ShiftCard extends Component {
     super();
     this.edit = this.edit.bind(this);
     this.start = this.start.bind(this);
+    this.delete = this.delete.bind(this);
     this.resume = this.resume.bind(this);
   }
 
   edit() {
     console.log('WHY IS THIS RUNNING!');
     FlowRouter.go(`/shifts/${this.props.shift.id}`);
-  }
-
-  delete() {
-
   }
 
   start() {
@@ -37,6 +34,10 @@ export default class ShiftCard extends Component {
         FlowRouter.go(`/deliveries/${this.props.shift.id}`);
       }
     });
+  }
+
+  delete() {
+    this.props.delete(this.props.shift.id);
   }
 
   resume() {
@@ -53,7 +54,7 @@ export default class ShiftCard extends Component {
 
     startTime = moment(new Date(startTime));
 
-    let day = (`${moment(new Date(startTime)).format('D, MMMM, YYYY h:mm a')}`);
+    let day = moment(new Date(startTime)).format('D, MMMM, YYYY h:mm a');
     if (endTime !== "undefined") day += ' to ' + endTime;
 
     let buttons = [<a className="waves-effect waves-light btn" key={ 1 } style={{ margin: '0 10px 10px 0' }} onClick={ this.edit } >Edit Shift</a>];
@@ -64,7 +65,7 @@ export default class ShiftCard extends Component {
       buttons.push(<a className="waves-effect waves-light btn" key={ 2 } style={{ margin: '0 10px 10px 0' }} onClick={ this.review } >Review Shift</a>);
     if (clockInTime !== "undefined" && clockOutTime == "undefined")
       buttons.push(<a className="waves-effect waves-light btn" key={ 3 } style={{ margin: '0 0 10px 0' }} onClick={ this.resume }>Resume Shift</a>);
-    buttons.push(<a className="waves-effect waves-light btn" key={ 3 } style={{ margin: '0 0 10px 0' }} onClick={ this.delete }>Delete Shift</a>)
+    buttons.push(<a className="waves-effect waves-light btn" key={ 4 } style={{ margin: '0 0 10px 0' }} onClick={ this.delete }>Delete Shift</a>)
 
     return (
         <div className='card grey lighten-4 row waves-effect waves-block default' style={{ margin: '10px 10px 10px 10px' }}>
