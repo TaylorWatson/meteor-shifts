@@ -1,10 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 
-// import { ShiftService } from '../services/shift-service';
 import Title from '../reactive-vars/Title';
 
-// import { EditShift } from './edit-shift.jsx';
-// import { DeliveriesPage } from './deliveries-page.jsx';
+import TimePicker from './ui/TimePicker';
 import ShiftCard from './ui/ShiftCard';
 
 //take out after shiftCards is finished.
@@ -14,6 +12,7 @@ import CloseIcon from 'material-ui/lib/svg-icons/navigation/close';
 import _ from 'lodash';
 import moment from 'moment';
 
+import Setting from '../models/Setting';
 import Shift from '../models/Shift';
 
 export default class Home extends Component {
@@ -22,14 +21,22 @@ export default class Home extends Component {
     super();
     this.delete = this.delete.bind(this);
     this.updateShiftsList = this.updateShiftsList.bind(this);
+    this.actionClicked = this.actionClicked.bind(this);
+    this.handleTimePickerSelection = this.handleTimePickerSelection.bind(this);
     this.state = {
-      shifts: []
+      shifts: [],
+      showTimePicker: false
     }
   }
 
   updateShiftsList() {
-    console.log('Updating shifts list...');
     Shift.findUpcoming((err, shifts) => {
+      shifts.sort((a, b) => {
+        let start = moment(new Date(a.startTime));
+        let end = moment(new Date(b.startTime));
+        if (start.isBefore(end)) return -1;
+        else return 1;
+      });
       this.setState({ shifts });
     });
   }
@@ -64,13 +71,47 @@ export default class Home extends Component {
     FlowRouter.go('/shifts');
   }
 
+  actionClicked(isClockedIn) {
+    return () => {
+      if (isClockedIn) {
+        let shiftId = _.find(this.state.shifts, s => (s.clockInTime !== "undefined" && s.clockOutTime == "undefined")).id;
+        FlowRouter.go(`/deliveries/${shiftId}`);
+      } else {
+        this.setState({ showTimePicker: true });
+      }
+    }
+  }
+
+  handleTimePickerSelection(e) {
+    this.setState({ showTimePicker: false });
+    let { value: time } = e.target;
+
+    console.log('Picked time: ', time);
+
+    Setting.find((err, setting) => {
+      if (err) {
+        FlowRouter.go('/settings');
+      } else {
+        let { defaultTitle: title = "Anonymous", defaultLocation: location } = setting;
+        let shift = new Shift({ title, location });
+        shift.setTime(time);
+        shift.setClockInTime(time);
+        shift.setSettings(setting);
+        shift.save((err, result) => {
+          console.log('Results: ', result);
+          FlowRouter.go(`/deliveries/${result.insertId}`);
+        });
+      }
+    });
+  }
+
   render() {
 
-    let shiftList;
+    let shiftList, currentlyClockedIn = false;
 
     if (this.state.shifts.length) {
 
-      let currentlyClockedIn = !!_.find(this.state.shifts, s => (s.clockInTime !== "undefined" && s.clockOutTime == "undefined"));
+      currentlyClockedIn = !!_.find(this.state.shifts, s => (s.clockInTime !== "undefined" && s.clockOutTime == "undefined"));
 
       shiftList = this.state.shifts.map((shift, i) => (
         <ShiftCard
@@ -86,9 +127,20 @@ export default class Home extends Component {
     }
 
     return (
-      <ul className="collapsible popout" data-collapsible="accordion" id='shifts'>
-        { shiftList }
-      </ul>
+      <div>
+        <div className="container">
+          <div onClick={ this.actionClicked(currentlyClockedIn) } className="waves-effect waves-light btn" style={{ width: '100%', margin: '10px 0 0 0' }}>
+            { currentlyClockedIn ? 'Resume Shift' : 'Clock In Now' }
+          </div>
+        </div>
+        <ul className="collapsible popout" data-collapsible="accordion" id='shifts'>
+          { shiftList }
+        </ul>
+        {
+          this.state.showTimePicker ? 
+          <TimePicker focusOnMount name="anonymous" onChange={ this.handleTimePickerSelection } />
+          : <div /> }
+      </div>
     );
   }
 }

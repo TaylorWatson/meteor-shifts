@@ -19,7 +19,6 @@ export default class ShiftCard extends Component {
   }
 
   edit() {
-    console.log('WHY IS THIS RUNNING!');
     FlowRouter.go(`/shifts/${this.props.shift.id}`);
   }
 
@@ -30,7 +29,6 @@ export default class ShiftCard extends Component {
         console.error(err);
         Materialize.toast(err, 3000);
       } else {
-        console.log('shiftID: ' + this.props.shift.id);
         FlowRouter.go(`/deliveries/${this.props.shift.id}`);
       }
     });
@@ -54,7 +52,7 @@ export default class ShiftCard extends Component {
 
     startTime = moment(new Date(startTime));
 
-    let day = moment(new Date(startTime)).format('MMMM D, h:mm a');
+    let day = moment(new Date(startTime)).format('dddd, MMMM D [at] h:mm a');
     if (endTime !== "undefined") day += ' to ' + endTime;
 
     let buttons = [<a className="waves-effect waves-light btn" key={ 1 } style={{ width: '100%', margin: '0 0px 10px 0' }} onClick={ this.edit } >Edit Shift</a>];
@@ -65,6 +63,7 @@ export default class ShiftCard extends Component {
       buttons.push(<a className="waves-effect waves-light btn" key={ 2 } style={{ width: '100%', margin: '0px 0px 10px 0px' }} onClick={ this.review } >Review Shift</a>);
     if (clockInTime !== "undefined" && clockOutTime == "undefined")
       buttons.push(<a className="waves-effect waves-light btn" key={ 3 } style={{ width: '100%', margin: '0 0 10px 0' }} onClick={ this.resume }>Resume Shift</a>);
+    if (clockInTime === "undefined" && clockOutTime === "undefined")
       buttons.push(<a className="waves-effect waves-light btn" key={ 4 } style={{ width: '100%', margin: '0 0 10px 0' }} onClick={ this.delete }>Delete Shift</a>);
 
     let hasLocation = location;
@@ -73,13 +72,13 @@ export default class ShiftCard extends Component {
     }
     return (
       <li className='grey lighten-4' style={{ margin: '10px' }}>
-        <div className="collapsible-header grey lighten-4" style={{ padding: '5px 5px 5px 5px'}}>
-          <h5 className='flow-text'><strong>{ day }</strong><MoreVertIcon className='activator right' color={ "black" } /></h5>
+        <div className="collapsible-header grey lighten-4" style={{ padding: '5px 5px 5px 15px'}}>
+          <h5 className='flow-text'><strong>{ day }</strong></h5>
           <h5 className='flow-text'><strong>{ title }</strong></h5>
           <h5 className='flow-text'>{ hasLocation }</h5>
         </div>
         <div className="collapsible-body grey lighten-4" style={{padding: '10px 10px 0px 10px'}}>
-              { buttons }
+          { buttons }
         </div>
       </li>
 
@@ -93,17 +92,3 @@ ShiftCard.propTypes = {
   shift: PropTypes.object.isRequired,
   currentlyClockedIn: PropTypes.bool
 }
-
-
-
-{/*<div className='card grey lighten-4 row waves-effect waves-block default' style={{ margin: '10px 10px 10px 10px' }}>
-          <div className='card-content'>
-            <p className='activator flow-text'>{ day }<MoreVertIcon className='activator right' color={ "black" } /></p>
-            <p>{ `Shift Title: ${ title }` }</p>
-            <p>{ location ? `Shift location: ${ location }` : '' }</p>
-          </div>
-          <div className='card-reveal'>
-            <span className='card-title' style={{ }}><CloseIcon className='right card-title' color={ "black" } /></span>
-            { buttons }
-          </div>
-        </div>*/}

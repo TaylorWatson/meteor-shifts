@@ -6,11 +6,14 @@ import Numeral from 'numeral';
 import { WEEK, MONTH, YEAR, ALL, CUSTOM } from '../enum/reportOptions';
 import moment from 'moment';
 import ShiftItem from './ui/ShiftItem';
+import numbro from 'numbro';
 
 export default class Reports extends Component {
   constructor() {
     super();
     this.state = {}
+    this.handleExport = this.handleExport.bind(this);
+    this.handleOnClick = this.handleOnClick.bind(this);
     this.selectChange = this.selectChange.bind(this);
     this.handleModal = this.handleModal.bind(this);
     this.handleCheckbox = this.handleCheckbox.bind(this);
@@ -23,7 +26,14 @@ export default class Reports extends Component {
   componentDidMount() {
     this.state.startDate = moment(new Date()).startOf('week');
     this.state.endDate = moment(new Date()).endOf('day');
-    $(this.refs.shiftModal).leanModal();
+    $(this.refs.shiftModal).leanModal({
+      dismissible: true
+    });
+    console.log(navigator);
+  }
+
+  componentWillUnmount() {
+    $(this.refs.shiftModal).closeModal();
   }
 
   handleChange(e) {
@@ -44,8 +54,19 @@ export default class Reports extends Component {
     console.log(this.state.checked);
   }
 
+  handleExport() {
+    var storage = window.localStorage;
+    var value = storage.getItem(key);
+    storage.setItem(key, value);
+    storage.removeItem(key);
+  }
+
   handleModal() {
     $(this.refs.shiftModal).openModal();
+  }
+
+  handleOnClick(shift) {
+    FlowRouter.go('/deliveries/:shiftId/summary', { shiftId: shift.id } );
   }
 
   selectChange(e) {
@@ -67,6 +88,9 @@ export default class Reports extends Component {
       case '3':
         state.startDate = moment(new Date(null));
         state.endDate = moment(new Date()).endOf('day');
+        break;
+      case '4':
+        this.handleChange;
         break;
     }
     console.log(state);
@@ -108,7 +132,7 @@ export default class Reports extends Component {
             name="range"
             value={ 6 }
             option={ this.selectOption }
-            onChange={ this.selectChange } />
+            onClick={ this.selectChange } />
 
         <p>
           <input type="checkbox" className="filled-in" id="filled-in-box" defaultChecked='checked' onClick={ this.handleCheckbox } />
@@ -176,39 +200,56 @@ export default class Reports extends Component {
   renderData() {
 
     let data = this.state.data;
-
+    let shifts = _.map(data, 'shift');
     let startRange = moment(new Date(this.state.startDate)).calendar();
     let endRange = moment(new Date(this.state.endDate)).calendar();
+
+    let shiftList = <p className='flow-text'>No Shifts In Report Time Frame</p>
+    console.log(shifts.length);
+    if (shifts.length) {
+      shiftList = shifts.map((shift, i) => (
+              <ShiftItem
+                day={ shift.day }
+                title={ shift.title }
+                location={ shift.location }
+                startTime={ shift.startTime }
+                endTime={ shift.clockOutTime }
+                key={ shift.id }
+                id={ shift.id }
+                shift={ this.handleOnClick }
+                />
+            ));
+    }
 
     return (
       <div className="container">
         <h3>Report</h3>
         <h5>{ startRange } - { endRange }</h5>
           <ul className='collection'>
-            <li className='collection-item flow-text'>Number Of Shifts: { data.length }</li>
-            <li className='collection-item flow-text'>Deliveries Taken: {_.sumBy(data, 'numberOfDeliveries')}</li>
-            <li className='collection-item flow-text'>Hours Worked: {numeral(_.sumBy(data, 'hoursWorked')).format('0.00')}</li>
-            <li className='collection-item flow-text'>Hourly Rate: {numeral(_.meanBy(data, 'calculatedHourly')).format('$0,0.00')}</li>
-            <li className='collection-item flow-text'>Hourly Income Earned: {numeral(_.sumBy(data, 'hourlyIncomeEarned')).format('$0,0.00')}</li>
-            <li className='collection-item flow-text'>Number Of Debit Fees: {_.sumBy(data, 'numberOfDebitFees')}</li>
-            <li className='collection-item flow-text'>Debit Fee Deductions: {numeral(_.sumBy(data, 'debitFeeDeductions')).format('$0,0.00')}</li>
-            <li className='collection-item flow-text'>Number Of Outs: { _.sumBy(data, 'numberOfOuts')}</li>
-            <li className='collection-item flow-text'>Out Bonus Income: {numeral(_.sumBy(data, 'outBonusIncome')).format('$0,0.00')}</li>
-            <li className='collection-item flow-text'>Delivery Bonus Income: {numeral(_.sumBy(data, 'deliveryBonusIncome')).format('$0,0.00')}</li>
-            <li className='collection-item flow-text'><strong>Total Tips: {numeral(_.sumBy(data, 'totalTips')).format('$0,0.00')}</strong></li>
-            <li className='collection-item flow-text'><strong>Total Income Earned: {numeral(_.sumBy(data, 'grandTotalIncome')).format('$0,0.00')}</strong></li>
+            <li className='collection-item flow-text'>Number Of Shifts: { shifts.length }</li>
+            <li className='collection-item flow-text'>Deliveries Taken: { _.sumBy(data, 'numberOfDeliveries') }</li>
+            <li className='collection-item flow-text'>Hours Worked: { numbro(_.sumBy(data, 'hoursWorked')).format('0,0') }</li>
+            <li className='collection-item flow-text'>Hourly Rate: { numbro(_.sumBy(data, 'calculatedHourly')).formatCurrency() }</li>
+            <li className='collection-item flow-text'>Hourly Income Earned: { numbro(_.sumBy(data, 'hourlyIncomeEarned')).formatCurrency() }</li>
+            <li className='collection-item flow-text'>Number Of Debit Fees: { _.sumBy(data, 'numberOfDebitFees')}</li>
+            <li className='collection-item flow-text'>Debit Fee Deductions: { numbro(_.sumBy(data, 'debitFeeDeductions')).formatCurrency() }</li>
+            <li className='collection-item flow-text'>Number Of Outs: { _.sumBy(data, 'numberOfOuts') }</li>
+            <li className='collection-item flow-text'>Out Bonus Income: { numbro(_.sumBy(data, 'outBonusIncome')).formatCurrency() }</li>
+            <li className='collection-item flow-text'>Delivery Bonus Income: { numbro(_.sumBy(data, 'deliveryBonusIncome')).formatCurrency() }</li>
+            <li className='collection-item flow-text'><strong>Total Tips: { numbro(_.sumBy(data, 'totalTips')).formatCurrency() }</strong></li>
+            <li className='collection-item flow-text'><strong>Total Income Earned: { numbro(_.sumBy(data, 'grandTotalIncome')).formatCurrency() }</strong></li>
           </ul>
         <button className="waves-effect waves-light btn" style={{ margin: '5px 0px 5px 0px', width: '100%'}} onClick={ this.handleModal } >View Shifts</button>
-        <button className="waves-effect waves-light btn" style={{ margin: '5px 0px 5px 0px', width: '100%'}} >Export</button>
+        <button className="waves-effect waves-light btn" style={{ margin: '5px 0px 5px 0px', width: '100%'}} onClick={ this.handleExport } >Export</button>
 
-        <div id="modal1" ref='shiftModal' className="modal bottom-sheet">
+        <div id="modal1"  ref='shiftModal' className="modal bottom-sheet">
           <div className="modal-content">
-            <h4>Reported Shifts</h4>
+            <h4>Shifts in reported time</h4>
+            <ul>
+              { shiftList }
+            </ul>
+          </div>
 
-          </div>
-          <div className="modal-footer">
-            {/*  shift list to go here */}
-          </div>
         </div>
 
       </div>

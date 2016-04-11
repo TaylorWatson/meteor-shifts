@@ -4,6 +4,7 @@ import moment from 'moment';
 import _ from 'lodash';
 
 import Shift from '../models/Shift';
+import Setting from '../models/Setting';
 
 import TimePicker from './ui/TimePicker';
 import DatePicker from './ui/DatePicker';
@@ -15,20 +16,31 @@ export default class EditShift extends Component {
 
     super(props);
 
-    if (this.props.shiftId) {
-      Shift.findOne(this.props.shiftId, (err, shift) => {
-        if (err) {
-          Materialize.toast('Error: ' + err, 3000);
-          FlowRouter.go('/');
+    Setting.find((err, setting) => {
+      if (err) {
+        Materialize.toast(err, 3000);
+        FlowRouter.go('/settings');
+      } else {
+
+        let { defaultTitle: title, defaultLocation: location } = setting;
+
+        if (this.props.shiftId) {
+          Shift.findOne(this.props.shiftId, (err, shift) => {
+            if (err) {
+              Materialize.toast('Error: ' + err, 3000);
+              FlowRouter.go('/');
+            } else {
+              this.setState({ shift });
+            }
+          })
         } else {
-          this.setState({ shift });
+          this.setState({
+            shift: new Shift({ location, title })
+          });
         }
-      })
-    } else {
-      this.state = {
-        shift: new Shift(props.shift || {})
+
       }
-    }
+    });
 
     this.saveClicked = this.saveClicked.bind(this);
     this.handleChange = this.handleChange.bind(this);

@@ -79,6 +79,18 @@ export default class Settings extends Component {
           icon={ <AttachMoney /> }
           type="currency" />
 
+        <InputField
+          label="Default Shift Title"
+          name="defaultTitle"
+          onChange={ this.handleChange }
+          value={ setting.defaultTitle } />
+
+        <InputField
+          label="Default Shift Location"
+          name="defaultLocation"
+          onChange={ this.handleChange }
+          value={ setting.defaultLocation } />
+
         <div onClick={ this.save } className="waves-effect waves-light btn" style={{ width: '100%' }}>
           Save Settings
         </div>

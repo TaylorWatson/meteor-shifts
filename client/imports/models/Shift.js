@@ -73,6 +73,30 @@ export default class Shift {
     })).toDate();
   }
 
+  setClockInTime(v) {
+    if (!this.clockInTime) {
+      this.clockInTime = new Date();
+    }
+    let [ hour, minuteStr ] = v.split(':');
+    hour = Number(hour);
+    let minute = Number(minuteStr.substr(0, 2));
+    if (minuteStr.substr(2, 2) == "AM" && hour == 12) {
+      hour = 0;
+    } else if (minuteStr.substr(2, 2) == "PM" && hour != 12) {
+      hour += 12;
+    }
+    this.clockInTime = (moment(new Date(this.clockInTime)).set({
+      hour, minute, second: 0, millisecond: 0
+    })).toDate();
+  }
+
+  setSettings(setting) {
+    this.hourlyRate = setting.hourlyRate;
+    this.outBonus = setting.outBonus;
+    this.debitFee = setting.debitFee;
+    this.unitBonus = setting.unitBonus;
+  }
+
   getHoursWorked() {
     if (!this.clockInTime) {
       throw new Error("Shift is not in process.");
@@ -126,6 +150,8 @@ export default class Shift {
           let calculatedHourly = grandTotalIncome / hoursWorked;
 
           resolve({
+            shift: this,
+            deliveries,
             hoursWorked,
             hourlyIncomeEarned,
             numberOfDeliveries,
@@ -192,20 +218,26 @@ export default class Shift {
 
   static insert(shift, callback) {
 
+    let fields = [
+      'title', 'location',
+      'startTime', 'endTime',
+      'clockInTime', 'clockOutTime',
+      'hourlyRate', 'outBonus', 'debitFee',
+      'unitBonus'
+    ];
+
+    let values = [];
+    let options = [];
+
+    _.each(fields, field => {
+      values.push('?');
+      options.push(shift[field]);
+    });
+
     DatabaseService.db.transaction(tx => {
       let sql = "INSERT INTO shifts" +
-      "(title, location, startTime, endTime, clockInTime, clockOutTime)" +
-      "VALUES (?,?,?,?,?,?)";
-
-
-      var options = [
-        shift.title,
-        shift.location || '',
-        shift.startTime,
-        shift.endTime,
-        shift.clockInTime,
-        shift.clockOutTime
-      ];
+      `(${ fields.join(', ') })` +
+      `VALUES (${ values.join(',') })`;
 
       tx.executeSql(sql, options, (tx, result) => {
         callback && callback(null, result);
@@ -215,21 +247,26 @@ export default class Shift {
 
   static update(shift, callback) {
 
+    let fields = [
+      'title', 'location', 'startTime',
+      'endTime', 'clockInTime', 'clockOutTime',
+      'hourlyRate', 'outBonus', 'debitFee', 'unitBonus'
+    ];
+
+    let set = [];
+    let options = [];
+
+    _.each(fields, field => {
+      set.push(`${field}=?`);
+      options.push(shift[field]);
+    });
+
+    options.push(shift.id);
+
     DatabaseService.db.transaction(tx => {
       let sql = "UPDATE shifts SET " +
-      "title=?, location=?, startTime=?, endTime=?, clockInTime=?, clockOutTime=?" +
+      `${ set.join(', ') } ` +
       "WHERE id=?";
-
-      let options = [
-        shift.title,
-        shift.location,
-        shift.startTime,
-        shift.endTime,
-        shift.clockInTime,
-        shift.clockOutTime,
-        shift.id
-      ];
-
 
       tx.executeSql(sql, options, (tx, result) => {
 

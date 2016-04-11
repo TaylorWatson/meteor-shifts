@@ -17,6 +17,11 @@ export default class TimePicker extends Component {
       donetext: 'Done',
       afterDone: this.timeDone
     });
+
+    if (this.props.focusOnMount) {
+      console.log('Focusing...');
+      this.refs.timeInput.focus();
+    }
   }
 
   setValue() {}
@@ -44,7 +49,7 @@ export default class TimePicker extends Component {
     }
     return (
       <div className="input-field">
-        <label htmlFor="startTime" ref="label" className={ value ? 'active' : '' }>{ this.props.label }</label>
+        <label htmlFor={ this.props.name } ref="label" className={ value ? 'active' : '' }>{ this.props.label }</label>
         <input id={ this.props.name } name={ this.props.name } value={ value } readOnly ref='timeInput' className="timepicker" type="text" />
       </div>
     )

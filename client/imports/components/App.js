@@ -40,8 +40,8 @@ export default class App extends Component {
         <div className='navbar-fixed'>
         <nav className="blue-grey darken-4">
           <div className="nav-wrapper">
-            <a href="#" className="brand-logo">{ this.props.title }</a>
-            <a href="#" data-activates="mobile-demo" ref="newTest" style={{ marginLeft: '19px' }} className="button-collapse waves-effect default"><MenuIcon color={ "white" } style={ iconStyle } /></a>
+            <a href="/" className="brand-logo">{ this.props.title }</a>
+            <a href="/" data-activates="mobile-demo" ref="newTest" style={{ marginLeft: '19px' }} className="button-collapse waves-effect default"><MenuIcon color={ "white" } style={ iconStyle } /></a>
             <a href="/shifts" className="right waves-effect default" style={{ marginRight: '15px' }} >Add Shift</a>
             <ul className="right hide-on-med-and-down">
               <li><a href="/reports">Reporting</a></li>

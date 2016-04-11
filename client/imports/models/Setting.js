@@ -15,6 +15,10 @@ export default class Setting {
   static find(callback) {
     DatabaseService.db.transaction((tx) => {
       tx.executeSql("SELECT * FROM settings;", [], (tx, { rows }) => {
+        if (!rows.length) {
+          callback('Settings are not configured.');
+          return;
+        }
         callback(null, new Setting(rows[0]));
       }, ErrorHandler);
     }, ErrorHandler)
@@ -31,8 +35,8 @@ export default class Setting {
           console.log("Inserting values");
 
 
-          tx.executeSql("INSERT INTO settings(hourlyRate, outBonus, debitFee, unitBonus) VALUES " +
-            "(?, ?, ?, ?);", [0, 0, 0, 0], (tx) => {
+          tx.executeSql("INSERT INTO settings(hourlyRate, outBonus, debitFee, unitBonus, defaultTitle, defaultLocation) VALUES " +
+            "(?, ?, ?, ?, ?, ?);", [0, 0, 0, 0, '', ''], (tx) => {
               console.log('Inserted! Selecting...');
               tx.executeSql("SELECT * FROM settings;", [], (tx, { rows }) => {
                 console.log('Success! Calling back with: ', rows[0]);
@@ -52,11 +56,15 @@ export default class Setting {
         "hourlyRate=?, " +
         "outBonus=?, " +
         "debitFee=?, " +
-        "unitBonus=? WHERE id=?;", [
+        "unitBonus=?, " +
+        "defaultTitle=?, " +
+        "defaultLocation=? WHERE id=?;", [
           shift.hourlyRate,
           shift.outBonus,
           shift.debitFee,
           shift.unitBonus,
+          shift.defaultTitle,
+          shift.defaultLocation,
           shift.id
         ], callback, ErrorHandler);
     }, ErrorHandler);

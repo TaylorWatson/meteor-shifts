@@ -39,7 +39,9 @@ class DatabaseService {
         "hourlyRate DECIMAL(4,2)," +
         "outBonus DECIMAL(4,2)," + 
         "debitFee DECIMAL(4,2)," +
-        "unitBonus DECIMAL(4,2));", [], null, ErrorHandler);
+        "unitBonus DECIMAL(4,2)," +
+        "defaultLocation VARCHAR(20)," +
+        "defaultTitle VARCHAR(20));", [], null, ErrorHandler);
 
     }, ErrorHandler);
   }

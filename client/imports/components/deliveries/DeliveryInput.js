@@ -32,8 +32,6 @@ export default class DeliveryInput extends Component {
 
     let { delivery } = this.props;
 
-    console.log(delivery);
-
     let options = [{
       value: CASH,
       text: 'Cash'

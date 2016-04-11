@@ -31,7 +31,7 @@ export default class Input extends Component {
       icon = <i className="prefix">{ icon }</i>;
     }
     let labelClass = "";
-    if (value || value == 0) {
+    if (value || value === 0) {
       labelClass = "active";
     }
 
