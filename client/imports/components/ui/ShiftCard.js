@@ -57,28 +57,32 @@ export default class ShiftCard extends Component {
     let day = moment(new Date(startTime)).format('D, MMMM, YYYY h:mm a');
     if (endTime !== "undefined") day += ' to ' + endTime;
 
-    let buttons = [<a className="waves-effect waves-light btn" key={ 1 } style={{ margin: '0 10px 10px 0' }} onClick={ this.edit } >Edit Shift</a>];
+    let buttons = [<a className="waves-effect waves-light btn" key={ 1 } style={{ width: '100%', margin: '0 0px 10px 0' }} onClick={ this.edit } >Edit Shift</a>];
 
     if (!currentlyClockedIn && (clockInTime == "undefined" && clockOutTime == "undefined") && (moment(new Date(startTime))).isSame(moment(new Date()), 'day'))
-      buttons.push(<a className="waves-effect waves-light btn" key={ 2 } style={{ margin: '0 10px 10px 0' }} onClick={ this.start } >Start Shift</a>);
+      buttons.push(<a className="waves-effect waves-light btn" key={ 2 } style={{ width: '100%', margin: '0px 0px 10px 0px' }} onClick={ this.start } >Start Shift</a>);
     if (clockOutTime !== "undefined" && clockInTime !== "undefined")
-      buttons.push(<a className="waves-effect waves-light btn" key={ 2 } style={{ margin: '0 10px 10px 0' }} onClick={ this.review } >Review Shift</a>);
+      buttons.push(<a className="waves-effect waves-light btn" key={ 2 } style={{ width: '100%', margin: '0px 0px 10px 0px' }} onClick={ this.review } >Review Shift</a>);
     if (clockInTime !== "undefined" && clockOutTime == "undefined")
-      buttons.push(<a className="waves-effect waves-light btn" key={ 3 } style={{ margin: '0 0 10px 0' }} onClick={ this.resume }>Resume Shift</a>);
-    buttons.push(<a className="waves-effect waves-light btn" key={ 4 } style={{ margin: '0 0 10px 0' }} onClick={ this.delete }>Delete Shift</a>)
+      buttons.push(<a className="waves-effect waves-light btn" key={ 3 } style={{ width: '100%', margin: '0 0 10px 0' }} onClick={ this.resume }>Resume Shift</a>);
+      buttons.push(<a className="waves-effect waves-light btn" key={ 4 } style={{ width: '100%', margin: '0 0 10px 0' }} onClick={ this.delete }>Delete Shift</a>);
 
+    let hasLocation = location;
+    if (!location) {
+      hasLocation = '';
+    }
     return (
-        <div className='card grey lighten-4 row waves-effect waves-block default' style={{ margin: '10px 10px 10px 10px' }}>
-          <div className='card-content'>
-            <p className='activator flow-text'>{ day }<MoreVertIcon className='activator right' color={ "black" } /></p>
-            <p>{ `Shift Title: ${ title }` }</p>
-            <p>{ location ? `Shift location: ${ location }` : '' }</p>
-          </div>
-          <div className='card-reveal'>
-            <span className='card-title' style={{ margin: '5px' }}><CloseIcon className='right card-title' color={ "black" } /></span>
-            { buttons }
-          </div>
+      <li style={{ margin: '10px' }}>
+        <div className="collapsible-header" style={{ padding: '5px 5px 5px 5px'}}>
+          <h5 className='flow-text'><strong>{ title }</strong><MoreVertIcon className='activator right' color={ "black" } /></h5>
+          <h5 className='flow-text'>{ hasLocation }</h5>
+          <h5 className='flow-text'>{ day }</h5>
         </div>
+        <div className="collapsible-body" style={{padding: '10px 10px 0px 10px'}}>
+              { buttons }
+        </div>
+      </li>
+
     );
 
   }
@@ -89,3 +93,17 @@ ShiftCard.propTypes = {
   shift: PropTypes.object.isRequired,
   currentlyClockedIn: PropTypes.bool
 }
+
+
+
+{/*<div className='card grey lighten-4 row waves-effect waves-block default' style={{ margin: '10px 10px 10px 10px' }}>
+          <div className='card-content'>
+            <p className='activator flow-text'>{ day }<MoreVertIcon className='activator right' color={ "black" } /></p>
+            <p>{ `Shift Title: ${ title }` }</p>
+            <p>{ location ? `Shift location: ${ location }` : '' }</p>
+          </div>
+          <div className='card-reveal'>
+            <span className='card-title' style={{ }}><CloseIcon className='right card-title' color={ "black" } /></span>
+            { buttons }
+          </div>
+        </div>*/}

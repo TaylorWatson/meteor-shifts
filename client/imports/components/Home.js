@@ -39,6 +39,9 @@ export default class Home extends Component {
     Materialize.showStaggeredList('#shifts');
     this.updateShiftsList();
     this.updateInterval = setInterval(this.updateShiftsList, 60000);
+    $('.collapsible').collapsible({
+      accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+    });
   }
 
 
@@ -83,7 +86,7 @@ export default class Home extends Component {
     }
 
     return (
-      <ul className="collection" id='shifts'>
+      <ul className="collapsible popout" data-collapsible="accordion" id='shifts'>
         { shiftList }
       </ul>
     );
