@@ -5,16 +5,25 @@ import ReportService from '../services/ReportService';
 import Numeral from 'numeral';
 import { WEEK, MONTH, YEAR, ALL, CUSTOM } from '../enum/reportOptions';
 import moment from 'moment';
+import ShiftItem from './ui/ShiftItem';
 
 export default class Reports extends Component {
   constructor() {
     super();
     this.state = {}
     this.selectChange = this.selectChange.bind(this);
+    this.handleModal = this.handleModal.bind(this);
+    this.handleCheckbox = this.handleCheckbox.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.generate = this.generate.bind(this);
     this.renderOptions = this.renderOptions.bind(this);
     this.renderData = this.renderData.bind(this);
+  }
+
+  componentDidMount() {
+    this.state.startDate = moment(new Date()).startOf('week');
+    this.state.endDate = moment(new Date()).endOf('day');
+    $(this.refs.shiftModal).leanModal();
   }
 
   handleChange(e) {
@@ -27,6 +36,16 @@ export default class Reports extends Component {
     state[e.target.name].set(e.target.value);
     console.log('New state: ', state);
     this.setState({ ...state });
+  }
+
+  handleCheckbox(e) {
+    this.state.checked = e.target.checked;
+    e.target.checked ? $(this.refs.metrics).material_select('destroy') : $(this.refs.metrics).material_select();
+    console.log(this.state.checked);
+  }
+
+  handleModal() {
+    $(this.refs.shiftModal).openModal();
   }
 
   selectChange(e) {
@@ -91,6 +110,26 @@ export default class Reports extends Component {
             option={ this.selectOption }
             onChange={ this.selectChange } />
 
+        <p>
+          <input type="checkbox" className="filled-in" id="filled-in-box" defaultChecked='checked' onClick={ this.handleCheckbox } />
+          <label htmlFor="filled-in-box">All metrics</label>
+        </p>
+
+        <select ref='metrics' multiple>
+          <option defaultSelected='selected' value="" disabled defaultSelected>Choose your options</option>
+          <option defaultChecked='checked' value="1">Number of shifts</option>
+          <option defaultChecked='checked' value="2">Deliveries taken</option>
+          <option defaultChecked='checked' value="3">Hourly rate</option>
+          <option defaultChecked='checked' value="4">Hourly income earned</option>
+          <option defaultChecked='checked' value="5">Number of debit fees</option>
+          <option defaultChecked='checked' value="6">Debit fee deductions</option>
+          <option defaultChecked='checked' value="7">Number of outs</option>
+          <option defaultChecked='checked' value="8">Out bonus income</option>
+          <option defaultChecked='checked' value="9">Delivery bonus income</option>
+          <option defaultChecked='checked' value="10">Total tips</option>
+          <option defaultChecked='checked' value="11">Total income earned</option>
+        </select>
+
         <div style={{ width: '100%' }}
              className="waves-effect waves-light btn blue-grey"
              onClick={ this.generate }>Generate!
@@ -107,7 +146,6 @@ export default class Reports extends Component {
             value={ 6 }
             option={ this.selectOption }
             onChange={ this.selectChange } />
-
 
         <h4>Custom Date Range</h4>
         <DatePicker
@@ -146,8 +184,6 @@ export default class Reports extends Component {
       <div className="container">
         <h3>Report</h3>
         <h5>{ startRange } - { endRange }</h5>
-
-
           <ul className='collection'>
             <li className='collection-item flow-text'>Number Of Shifts: { data.length }</li>
             <li className='collection-item flow-text'>Deliveries Taken: {_.sumBy(data, 'numberOfDeliveries')}</li>
@@ -162,8 +198,19 @@ export default class Reports extends Component {
             <li className='collection-item flow-text'><strong>Total Tips: {numeral(_.sumBy(data, 'totalTips')).format('$0,0.00')}</strong></li>
             <li className='collection-item flow-text'><strong>Total Income Earned: {numeral(_.sumBy(data, 'grandTotalIncome')).format('$0,0.00')}</strong></li>
           </ul>
-
+        <button className="waves-effect waves-light btn" style={{ margin: '5px 0px 5px 0px', width: '100%'}} onClick={ this.handleModal } >View Shifts</button>
         <button className="waves-effect waves-light btn" style={{ margin: '5px 0px 5px 0px', width: '100%'}} >Export</button>
+
+        <div id="modal1" ref='shiftModal' className="modal bottom-sheet">
+          <div className="modal-content">
+            <h4>Reported Shifts</h4>
+
+          </div>
+          <div className="modal-footer">
+            {/*  shift list to go here */}
+          </div>
+        </div>
+
       </div>
     );
   }
