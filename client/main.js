@@ -1,6 +1,12 @@
 import App from './imports/components/AppContainer';
 import Home from './imports/components/HomeContainer';
 import Reports from './imports/components/Reports';
+import Help from './imports/components/Help';
+import HelpAdd from './imports/components/help/HelpAdd';
+import HelpClock from './imports/components/help/HelpClock';
+import HelpDelivery from './imports/components/help/HelpDelivery';
+import HelpSummary from './imports/components/help/HelpSummary';
+import HelpGenerate from './imports/components/help/HelpGenerate';
 import EditShift from './imports/components/EditShift';
 import DeliverySingle from './imports/components/deliveries/DeliverySingle';
 import DeliveryPage from './imports/components/deliveries/DeliveryPage';
@@ -74,4 +80,45 @@ FlowRouter.route('/reports', {
     Title.set('Generate Reports');
     mount(App, { content: <Reports /> });
   }
-})
+});
+
+FlowRouter.route('/help', {
+  action() {
+    mount(App, { content: <Help /> });
+  }
+});
+
+FlowRouter.route('/reset', {
+  action() {
+    if (DatabaseService.db) {
+      DatabaseService.refresh();
+    }
+    FlowRouter.go('/help');
+  }
+});
+
+FlowRouter.route('/help/add', {
+  action() {
+    mount(App, { content: <HelpAdd /> });
+  }
+});
+FlowRouter.route('/help/clock', {
+  action() {
+    mount(App, { content: <HelpClock /> });
+  }
+});
+FlowRouter.route('/help/add-delivery', {
+  action() {
+    mount(App, { content: <HelpDelivery /> });
+  }
+});
+FlowRouter.route('/help/view-sum', {
+  action() {
+    mount(App, { content: <HelpSummary /> });
+  }
+});
+FlowRouter.route('/help/generate', {
+  action() {
+    mount(App, { content: <HelpGenerate /> });
+  }
+});

@@ -77,9 +77,12 @@ export default class ShiftOverview extends Component {
 
     let BiggestTip = _.maxBy(deliveries, 'tipAmount');
 
+    let startTime = moment(new Date(shift.startTime)).format('h:mm A');
+
     return (
       <div className="container"><br/>
         <ul className="collection">
+          <li className="collection-item">Start Time: { startTime }</li>
           <li className="collection-item">Deliveries Taken: { stats.numberOfDeliveries }</li>
           <li className="collection-item">Hours Worked: { numeral(stats.hoursWorked).format('0.00') }</li>
           <li className="collection-item">Hourly Rate: { numeral(shift.hourlyRate).format('0.00') }</li>
