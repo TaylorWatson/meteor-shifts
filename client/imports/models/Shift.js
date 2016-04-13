@@ -112,9 +112,6 @@ export default class Shift {
 
     let duration = moment.duration(end.diff(start));
     let hours = duration.asHours();
-    let minutes = duration.asMinutes();
-    let minutesAsHours = (minutes % 60) / 60;
-    hours += minutesAsHours;
 
     return hours;
   }
@@ -126,6 +123,7 @@ export default class Shift {
           reject(err);
         } else {
           let hoursWorked = this.getHoursWorked();
+          console.log('Hours worked: ' + hoursWorked);
           let hourlyIncomeEarned = hoursWorked * (this.hourlyRate || 1);
 
           let numberOfDeliveries = deliveries.length;
