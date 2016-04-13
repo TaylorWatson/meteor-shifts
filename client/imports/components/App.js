@@ -53,8 +53,8 @@ export default class App extends Component {
               <li><a href="/">Home</a></li>
               <li><a href="/reports">Reporting</a></li>
               <li><a href="/settings">Set metrics</a></li>
-              <li><a href="#">Help and feedback</a></li>
-              <li><a href="#">Rate the app</a></li>
+              <li><a href="/help">Help</a></li>
+              <li><a href="/reset">DEBUG: Reset Database</a></li>
             </ul>
           </div>
         </nav>

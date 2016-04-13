@@ -27,6 +27,12 @@ export default class Home extends Component {
       shifts: [],
       showTimePicker: false
     }
+
+    Setting.find((err, setting) => {
+      if (err) {
+        FlowRouter.go('/help');
+      }
+    });
   }
 
   updateShiftsList() {
