@@ -9,6 +9,7 @@ import Settings from './imports/components/Settings';
 import { DatabaseService } from './imports/services/DatabaseService';
 import Title from './imports/reactive-vars/Title';
 
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount } from 'react-mounter';
@@ -19,8 +20,12 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 Meteor.startup(() => {
-  DatabaseService.init();
+  document.addEventListener('deviceready', () => {
+    DatabaseService.init()
+  }, false);
 });
+
+
 
 FlowRouter.route('/', {
   action() {
@@ -70,6 +75,3 @@ FlowRouter.route('/reports', {
     mount(App, { content: <Reports /> });
   }
 })
-
-
-//whyyyyyy

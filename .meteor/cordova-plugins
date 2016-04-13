@@ -1,2 +1,1 @@
-cordova-plugin-websql@0.0.10
-cordova-sqlite-storage@0.7.11
+cordova-sqlite-plugin@https://github.com/litehelpers/Cordova-sqlite-storage.git#061e1bd2f278e869a9092b9f47ef513bf491141d
