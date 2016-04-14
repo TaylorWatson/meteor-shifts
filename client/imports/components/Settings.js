@@ -53,7 +53,7 @@ export default class Settings extends Component {
           onChange={ this.handleChange }
           value={ setting.hourlyRate }
           icon={ <AttachMoney /> }
-          type="currency" />
+          type="tel" />
 
         <InputField
           label="Out Bonus"
