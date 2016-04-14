@@ -6,7 +6,6 @@ import Help from './imports/components/Help';
 import HelpAdd from './imports/components/help/HelpAdd';
 import HelpClock from './imports/components/help/HelpClock';
 import HelpDelivery from './imports/components/help/HelpDelivery';
-import HelpSummary from './imports/components/help/HelpSummary';
 import HelpGenerate from './imports/components/help/HelpGenerate';
 import EditShift from './imports/components/EditShift';
 import DeliverySingle from './imports/components/deliveries/DeliverySingle';
@@ -83,6 +82,7 @@ FlowRouter.route('/reports', {
 
 FlowRouter.route('/help', {
   action() {
+    Title.set('Help');
     mount(App, { content: <Help /> });
   }
 });
@@ -98,30 +98,28 @@ FlowRouter.route('/reset', {
 
 FlowRouter.route('/help/add', {
   action() {
-    mount(HelpApp, { content: <HelpAdd /> });
+    Title.set('Help');
+    mount(App, { content: <HelpAdd /> });
   }
 });
 
 FlowRouter.route('/help/clock', {
   action() {
+    Title.set('Help');
     mount(App, { content: <HelpClock /> });
   }
 });
 
 FlowRouter.route('/help/add-delivery', {
   action() {
+    Title.set('Help');
     mount(App, { content: <HelpDelivery /> });
-  }
-});
-
-FlowRouter.route('/help/view-sum', {
-  action() {
-    mount(App, { content: <HelpSummary /> });
   }
 });
 
 FlowRouter.route('/help/generate', {
   action() {
+    Title.set('Help');
     mount(App, { content: <HelpGenerate /> });
   }
 });

@@ -73,23 +73,23 @@ export default class Reports extends Component {
     let state = this.state;
     state.selectOption = e.target.value;
     switch (e.target.value) {
-      case '0':
+      case WEEK:
         state.startDate = moment(new Date()).startOf('week');
         state.endDate = moment(new Date()).endOf('day');
         break;
-      case '1':
+      case MONTH:
         state.startDate = moment(new Date()).startOf('month');
         state.endDate = moment(new Date()).endOf('day');
         break;
-      case '2':
+      case YEAR:
         state.startDate = moment(new Date()).startOf('year');
         state.endDate = moment(new Date()).endOf('day');
         break;
-      case '3':
+      case ALL:
         state.startDate = moment(new Date(null));
         state.endDate = moment(new Date()).endOf('day');
         break;
-      case '4':
+      case CUSTOM:
         this.handleChange;
         break;
     }
@@ -123,7 +123,8 @@ export default class Reports extends Component {
         value: CUSTOM, text: 'Custom'
       }];
 
-    let viewOptions = <div className="container">
+    let viewOptions = (
+      <div className="container">
         <br />
         <h4>Select Range</h4>
 
@@ -132,7 +133,7 @@ export default class Reports extends Component {
             name="range"
             value={ 6 }
             option={ this.selectOption }
-            onClick={ this.selectChange } />
+            onChange={ this.selectChange } />
 
         <p>
           <input type="checkbox" className="filled-in" id="filled-in-box" defaultChecked='checked' onClick={ this.handleCheckbox } />
@@ -159,35 +160,38 @@ export default class Reports extends Component {
              onClick={ this.generate }>Generate!
         </div>
       </div>
+    );
 
     if (this.state.selectOption == 4) {
-      viewOptions = <div className="container">
-        <br />
-        <h4>Select Range</h4>
-        <SelectOption
-            options={ options }
-            name="range"
-            value={ 6 }
-            option={ this.selectOption }
-            onChange={ this.selectChange } />
+      viewOptions = (
+        <div className="container">
+          <br />
+          <h4>Select Range</h4>
+          <SelectOption
+              options={ options }
+              name="range"
+              value={ 6 }
+              option={ this.selectOption }
+              onChange={ this.selectChange } />
 
-        <h4>Custom Date Range</h4>
-        <DatePicker
-          onChange={ this.handleChange }
-          name="startDate"
-          label="Start Date"
-          value={ this.state.startDate } />
+          <h4>Custom Date Range</h4>
+          <DatePicker
+            onChange={ this.handleChange }
+            name="startDate"
+            label="Start Date"
+            value={ this.state.startDate } />
 
-        <DatePicker
-          onChange={ this.handleChange }
-          name="endDate"
-          label="End Date"
-          value={ this.state.endDate } />
+          <DatePicker
+            onChange={ this.handleChange }
+            name="endDate"
+            label="End Date"
+            value={ this.state.endDate } />
 
-        <div style={{ width: '100%' }}
-             className="waves-effect waves-light btn blue-grey"
-             onClick={ this.generate }>Generate!</div>
-      </div>
+          <div style={{ width: '100%' }}
+               className="waves-effect waves-light btn blue-grey"
+               onClick={ this.generate }>Generate!</div>
+        </div>
+      );
     }
 
     return (

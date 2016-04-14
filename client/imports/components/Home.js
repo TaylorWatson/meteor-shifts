@@ -99,11 +99,16 @@ export default class Home extends Component {
         FlowRouter.go('/settings');
       } else {
         let { defaultTitle: title = "Anonymous", defaultLocation: location } = setting;
+        if (!title) { title = "Anonymous" };
         let shift = new Shift({ title, location });
         shift.setTime(time);
         shift.setClockInTime(time);
         shift.setSettings(setting);
         shift.save((err, result) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
           console.log('Results: ', result);
           FlowRouter.go(`/deliveries/${result.insertId}`);
         });

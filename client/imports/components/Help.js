@@ -11,8 +11,7 @@ export default class Help extends Component {
           <li className="collection-item"><a href="/help/add">Adding a shift</a></li>
           <li className="collection-item"><a href="/help/clock">Clocking in for an anonymous shift.</a></li>
           <li className="collection-item"><a href="/help/add-delivery">Adding deliveries taken to your shift.</a></li>
-          <li className="collection-item"><a href="/help/view-sum">Viewing shift's summary and stats.</a></li>
-          <li className="collection-item"><a href="/help/generate">Generating a report.</a></li>
+          <li className="collection-item"><a href="/help/generate">Generating a report, reviewing old shifts.</a></li>
         </ul>
         <a href="/settings" style={{ width: '100%', margin: '5px 0px 5px 0px' }} className="waves-effect waves-light btn">Configure Settings</a>
       </div>
