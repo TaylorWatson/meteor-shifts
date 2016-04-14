@@ -10,10 +10,10 @@ class DatabaseService {
 
   init() {
 
-    this.db = window.sqlitePlugin.openDatabase({ name: 'shiftsDB', iosDatabaseLocation: 'Library'}, null, ErrorHandler);
+    this.db = sqlitePlugin.openDatabase({ name: 'shiftsDB', iosDatabaseLocation: 'default', androidLockWorkaround: 1 });
     this.db.transaction((tx) => {
 
-      tx.executeSql("CREATE TABLE IF NOT EXISTS shifts(" +
+      tx.executeSql("CREATE TABLE IF NOT EXISTS shifts (" +
         "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
         "title VARCHAR(20) NOT NULL," +
         "location VARCHAR(20)," +
@@ -99,7 +99,7 @@ class DatabaseService {
 DatabaseService = new DatabaseService();
 
 try {
-  window.sqlitePlugin.DatabaseService = DatabaseService;
+  sqlitePlugin.DatabaseService = DatabaseService;
 } catch (e) {}
 
 export { DatabaseService }
