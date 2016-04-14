@@ -3,15 +3,18 @@ import { SampleShifts, SampleDeliveries } from './seed/seed';
 import Shift from '../models/Shift';
 import Delivery from '../models/Delivery';
 
+
 class DatabaseService {
 
   constructor() {}
 
   init() {
-    this.db = openDatabase('shiftsDB', '1.0', 'Shifts DB', 2 * 1024 * 1024);
+
+    this.db = window.sqlitePlugin.openDatabase({ name: 'shiftsDB', iosDatabaseLocation: 'Library', androidLockWorkaround: 1 }, null, ErrorHandler);
+
     this.db.transaction((tx) => {
 
-      tx.executeSql("CREATE TABLE IF NOT EXISTS shifts(" +
+      tx.executeSql("CREATE TABLE IF NOT EXISTS shifts (" +
         "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
         "title VARCHAR(20) NOT NULL," +
         "location VARCHAR(20)," +
@@ -37,7 +40,7 @@ class DatabaseService {
       tx.executeSql("CREATE TABLE IF NOT EXISTS settings (" +
         "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
         "hourlyRate DECIMAL(4,2)," +
-        "outBonus DECIMAL(4,2)," + 
+        "outBonus DECIMAL(4,2)," +
         "debitFee DECIMAL(4,2)," +
         "unitBonus DECIMAL(4,2)," +
         "defaultLocation VARCHAR(20)," +

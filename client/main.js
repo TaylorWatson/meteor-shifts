@@ -15,6 +15,7 @@ import Settings from './imports/components/Settings';
 import { DatabaseService } from './imports/services/DatabaseService';
 import Title from './imports/reactive-vars/Title';
 
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount } from 'react-mounter';
@@ -23,6 +24,8 @@ import { Meteor } from 'meteor/meteor';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
+
+import FastClick from 'fastclick';
 
 Meteor.startup(() => {
   DatabaseService.init();
@@ -97,26 +100,27 @@ FlowRouter.route('/help/add', {
     mount(App, { content: <HelpAdd /> });
   }
 });
+
 FlowRouter.route('/help/clock', {
   action() {
     mount(App, { content: <HelpClock /> });
   }
 });
+
 FlowRouter.route('/help/add-delivery', {
   action() {
     mount(App, { content: <HelpDelivery /> });
   }
 });
+
 FlowRouter.route('/help/view-sum', {
   action() {
     mount(App, { content: <HelpSummary /> });
   }
 });
+
 FlowRouter.route('/help/generate', {
   action() {
     mount(App, { content: <HelpGenerate /> });
   }
 });
-
-
-//whyyyyyy

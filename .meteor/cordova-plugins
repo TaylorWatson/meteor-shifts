@@ -1,0 +1,3 @@
+cordova-plugin-device@https://github.com/apache/cordova-plugin-device.git#32a9a99617c019bd05b940d201284d5f07c8ad0d
+cordova-plugin-file@https://github.com/apache/cordova-plugin-file.git#0e4971543fd4006018275441812b5e5bb18a4fa0
+cordova-sqlite-plugin@https://github.com/litehelpers/Cordova-sqlite-storage.git#061e1bd2f278e869a9092b9f47ef513bf491141d

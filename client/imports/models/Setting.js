@@ -19,7 +19,7 @@ export default class Setting {
           callback('Settings are not configured.');
           return;
         }
-        callback(null, new Setting(rows[0]));
+        callback(null, new Setting(rows.item(0)));
       }, ErrorHandler);
     }, ErrorHandler)
   }
@@ -27,10 +27,10 @@ export default class Setting {
   static findOrCreate(callback) {
     DatabaseService.db.transaction((tx) => {
       console.log('Starting transaction...');
-      tx.executeSql("SELECT * FROM settings;", [], (tx, { rows }) => {
-        console.log('Got rows: ', rows);
-        if (rows.length) {
-          callback(null, new Setting(rows[0]));
+      tx.executeSql("SELECT * FROM settings;", [], (tx, results) => {
+        console.log('Got results: ', results);
+        if (results.rows.length) {
+          callback(null, new Setting(results.rows.item(0)));
         } else {
           console.log("Inserting values");
 
@@ -39,8 +39,7 @@ export default class Setting {
             "(?, ?, ?, ?, ?, ?);", [0, 0, 0, 0, '', ''], (tx) => {
               console.log('Inserted! Selecting...');
               tx.executeSql("SELECT * FROM settings;", [], (tx, { rows }) => {
-                console.log('Success! Calling back with: ', rows[0]);
-                callback(null, new Setting(rows[0]));
+                callback(null, new Setting(rows.item(0)));
               }, ErrorHandler);
             }, ErrorHandler);
 

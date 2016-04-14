@@ -44,7 +44,7 @@ export default class TimePicker extends Component {
     let value = this.props.value;
     if (value && (_.isObject(value) || (_.isString(value) && value.length > 10))) {
       value = moment(new Date(value)).format('hh:mmA');
-    } else if (value == "undefined") {
+    } else if (!value) {
       value = '';
     }
     return (

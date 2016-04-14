@@ -177,7 +177,7 @@ export default class Delivery {
       let sql = 'SELECT * FROM deliveries WHERE shiftId=?;';
       tx.executeSql(sql, [shiftId], (tx, result) => {
 
-        let deliveries = _.map(result.rows, d => new Delivery(d));
+        let deliveries = _.map(_.range(result.rows.length), i => new Delivery(result.rows.item(i)));
         callback(null, deliveries);
 
   		}, ErrorHandler);

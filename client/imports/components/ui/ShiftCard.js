@@ -53,17 +53,17 @@ export default class ShiftCard extends Component {
     startTime = moment(new Date(startTime));
 
     let day = moment(new Date(startTime)).format('dddd, MMMM D [at] h:mm a');
-    if (endTime !== "undefined") day += ' to ' + endTime;
+    if (endTime) day += ' to ' + endTime;
 
     let buttons = [<a className="waves-effect waves-light btn" key={ 1 } style={{ width: '100%', margin: '0 0px 10px 0' }} onClick={ this.edit } >Edit Shift</a>];
 
-    if (!currentlyClockedIn && (clockInTime == "undefined" && clockOutTime == "undefined") && (moment(new Date(startTime))).isSame(moment(new Date()), 'day'))
+    if (!currentlyClockedIn && (!clockInTime && !clockOutTime) && (moment(new Date(startTime))).isSame(moment(new Date()), 'day'))
       buttons.push(<a className="waves-effect waves-light btn" key={ 2 } style={{ width: '100%', margin: '0px 0px 10px 0px' }} onClick={ this.start } >Start Shift</a>);
-    if (clockOutTime !== "undefined" && clockInTime !== "undefined")
+    if (clockOutTime && clockInTime)
       buttons.push(<a className="waves-effect waves-light btn" key={ 2 } style={{ width: '100%', margin: '0px 0px 10px 0px' }} onClick={ this.review } >Review Shift</a>);
-    if (clockInTime !== "undefined" && clockOutTime == "undefined")
+    if (clockInTime && !clockOutTime)
       buttons.push(<a className="waves-effect waves-light btn" key={ 3 } style={{ width: '100%', margin: '0 0 10px 0' }} onClick={ this.resume }>Resume Shift</a>);
-    if (clockInTime === "undefined" && clockOutTime === "undefined")
+    if (!clockInTime && !clockOutTime)
       buttons.push(<a className="waves-effect waves-light btn" key={ 4 } style={{ width: '100%', margin: '0 0 10px 0' }} onClick={ this.delete }>Delete Shift</a>);
 
     let hasLocation = location;
