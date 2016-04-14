@@ -1,4 +1,5 @@
 import App from './imports/components/AppContainer';
+import HelpApp from './imports/components/HelpAppContainer';
 import Home from './imports/components/HomeContainer';
 import Reports from './imports/components/Reports';
 import Help from './imports/components/Help';
@@ -97,7 +98,7 @@ FlowRouter.route('/reset', {
 
 FlowRouter.route('/help/add', {
   action() {
-    mount(App, { content: <HelpAdd /> });
+    mount(HelpApp, { content: <HelpAdd /> });
   }
 });
 
