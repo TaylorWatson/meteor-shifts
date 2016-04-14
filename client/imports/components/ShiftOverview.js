@@ -25,7 +25,7 @@ export default class ShiftOverview extends Component {
         this.setState({ stats });
       });
 
-      if (shift.clockOutTime == 'undefined') {
+      if (!shift.clockOutTime) {
         this.startInterval();
       }
 
