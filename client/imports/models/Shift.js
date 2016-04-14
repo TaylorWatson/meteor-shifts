@@ -104,7 +104,7 @@ export default class Shift {
 
     let start = moment(new Date(this.clockInTime));
     let end;
-    if (!this.clockOutTime || this.clockOutTime == "undefined") {
+    if (!this.clockOutTime) {
       end = moment(new Date());
     } else {
       end = moment(new Date(this.clockOutTime));
@@ -169,15 +169,17 @@ export default class Shift {
   }
 
   static find(callback) {
-    let shifts = [];
     DatabaseService.db.transaction(tx => {
       let sql = "SELECT * FROM shifts ORDER BY startTime;";
 
       tx.executeSql(sql, [], (tx, results) => {
 
-        _.each(results.rows, (shift) => {
-          shifts.push(new Shift(shift));
-        });
+        console.log('Got shift results: ', results);
+
+
+        let shifts = _.map(_.range(results.rows.length), i => new Shift(results.rows.item(i)));
+
+        console.log('Shifts: ', shifts);
 
         callback(null, shifts);
       }, ErrorHandler);
@@ -185,18 +187,18 @@ export default class Shift {
   }
 
   static findUpcoming(callback) {
-    let shifts = [];
-    DatabaseService.db.transaction(tx => {
-      let sql = "SELECT * FROM shifts WHERE startTime > ? AND clockOutTime = ? OR clockInTime IS NOT NULL AND clockOutTime = ?";
-      tx.executeSql(sql, [ moment(new Date()).subtract(6, 'hours'), 'undefined', 'undefined' ], (tx, results) => {
+    Shift.find((err, shifts) => {
+      shifts = _.filter(shifts, (s) => {
+        let nowMinusSix = moment(new Date()).add({ hours: -6 });
+        let shiftTime = moment(new Date(s.startTime));
+        
+        if (shiftTime.isBefore(nowMinusSix)) return false;
+        if (s.clockInTime && s.clockOutTime) return false;
+        return true;
+      });
 
-        _.each(results.rows, (shift) => {
-          shifts.push(new Shift(shift));
-        });
-
-        callback(null, shifts);
-      }, ErrorHandler);
-    }, ErrorHandler);
+      callback(null, shifts);
+    });
   }
 
   static findOne(id, callback) {
@@ -208,7 +210,7 @@ export default class Shift {
 
         if (!results.rows.length) callback("No results by that ID");
 
-        callback(null, new Shift(results.rows[0]));
+        callback(null, new Shift(results.rows.item(0)));
       }, ErrorHandler);
     }, ErrorHandler);
 
@@ -237,7 +239,10 @@ export default class Shift {
       `(${ fields.join(', ') })` +
       `VALUES (${ values.join(',') })`;
 
+      console.log('Inserting: ', sql);
+
       tx.executeSql(sql, options, (tx, result) => {
+        console.log('Write success: ', result);
         callback && callback(null, result);
       }, ErrorHandler);
     }, ErrorHandler);

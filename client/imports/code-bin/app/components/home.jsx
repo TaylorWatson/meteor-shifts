@@ -39,7 +39,7 @@ const Home = React.createClass({
 
     if (this.state.shifts) {
 
-      let currentlyClockedIn = !!_.find(this.state.shifts, s => (s.clockInTime !== "undefined" && s.clockOutTime == "undefined"));
+      let currentlyClockedIn = !!_.find(this.state.shifts, s => (!!s.clockInTime && !s.clockOutTime));
 
       shiftList = this.state.shifts.map((shift, i) => (
         <ShiftCard

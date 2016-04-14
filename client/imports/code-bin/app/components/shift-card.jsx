@@ -51,7 +51,7 @@ const ShiftCard = React.createClass({
 
     if (!currentlyClockedIn && (moment(new Date(startTime))).isSame(moment(new Date()), 'day'))
       buttons.push(<FlatButton label="Start Shift" key={2} onClick={ this.start } />);
-    if (clockInTime !== "undefined" && clockOutTime == "undefined")
+    if (clockInTime && !clockOutTime)
       buttons.push(<FlatButton label="Resume Shift" key={3} onClick={ this.resume } />);
 
     return (

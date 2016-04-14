@@ -80,7 +80,7 @@ export default class Home extends Component {
   actionClicked(isClockedIn) {
     return () => {
       if (isClockedIn) {
-        let shiftId = _.find(this.state.shifts, s => (s.clockInTime !== "undefined" && s.clockOutTime == "undefined")).id;
+        let shiftId = _.find(this.state.shifts, s => (!!s.clockInTime && !s.clockOutTime)).id;
         FlowRouter.go(`/deliveries/${shiftId}`);
       } else {
         this.setState({ showTimePicker: true });
@@ -117,7 +117,7 @@ export default class Home extends Component {
 
     if (this.state.shifts.length) {
 
-      currentlyClockedIn = !!_.find(this.state.shifts, s => (s.clockInTime !== "undefined" && s.clockOutTime == "undefined"));
+      currentlyClockedIn = !!_.find(this.state.shifts, s => (!!s.clockInTime && !s.clockOutTime));
 
       shiftList = this.state.shifts.map((shift, i) => (
         <ShiftCard

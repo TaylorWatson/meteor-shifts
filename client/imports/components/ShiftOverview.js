@@ -71,7 +71,7 @@ export default class ShiftOverview extends Component {
       <div key={1} />,
       <div key={2} className="waves-effect waves-light btn" style={{ margin: '5px 0px 5px 0px', width: '100%'}} onClick={ this.back }>Return</div>
     ];
-    if (!shift.clockOutTime || shift.clockOutTime == "undefined") {
+    if (!shift.clockOutTime) {
       Buttons[1] = <div key={3} className="waves-effect waves-light btn" style={{ margin: '5px 0px 5px 0px', width: '100%'}} onClick={ this.clockOut }>Clock Out</div>;
     }
 

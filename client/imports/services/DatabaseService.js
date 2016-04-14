@@ -100,11 +100,7 @@ class DatabaseService {
 DatabaseService = new DatabaseService();
 
 try {
-<<<<<<< Updated upstream
-  sqlitePlugin.DatabaseService = DatabaseService;
-=======
   window.DatabaseService = DatabaseService;
->>>>>>> Stashed changes
 } catch (e) {}
 
 export { DatabaseService }
