@@ -10,7 +10,8 @@ class DatabaseService {
 
   init() {
 
-    this.db = sqlitePlugin.openDatabase({ name: 'shiftsDB', iosDatabaseLocation: 'default', androidLockWorkaround: 1 });
+    this.db = window.sqlitePlugin.openDatabase({ name: 'shiftsDB', iosDatabaseLocation: 'Library', androidLockWorkaround: 1 }, null, ErrorHandler);
+
     this.db.transaction((tx) => {
 
       tx.executeSql("CREATE TABLE IF NOT EXISTS shifts (" +
@@ -99,7 +100,11 @@ class DatabaseService {
 DatabaseService = new DatabaseService();
 
 try {
+<<<<<<< Updated upstream
   sqlitePlugin.DatabaseService = DatabaseService;
+=======
+  window.DatabaseService = DatabaseService;
+>>>>>>> Stashed changes
 } catch (e) {}
 
 export { DatabaseService }

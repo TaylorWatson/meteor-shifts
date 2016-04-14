@@ -6,6 +6,7 @@ App.info({
   author: 'Shifts'
 });
 
+
 // Set up resources such as icons and launch screens.
 App.icons({
   'iphone_2x': './client/imports/assets/images/icons/iphone_2x.png',
